@@ -11,14 +11,14 @@ return [
     | 1 => OverheidIO  https://overheid.io/       (API key needed)
     */
 
-    'rdw_use' => 0,
+    'rdw_api_use' => 0,
 
-    'rdw_use_short' => [
+    'rdw_api_use_short' => [
         'opendata',
         'overheid'
     ],
 
-    'rdw_api' => [
+    'rdw_api_namespace' => [
         'OpendataRdw',
         'OverheidIO'
     ],
@@ -35,14 +35,14 @@ return [
 
     /*
     |--------------------------------------------------------------------------
-    | Test URI
+    | SHOW DEMO
     |--------------------------------------------------------------------------
     |
-    | make (in)active
+    | make example (in)active for testing
     |
-    | /test-rdw
+    | /rdw-api-demo
     |
     */
 
-    'rdw_test_uri' => 1,
+    'rdw_api_demo' => 1,
 ];
