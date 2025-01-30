@@ -45,4 +45,17 @@ return [
     */
 
     'rdw_api_demo' => 1,
+    'rdw_api_demo_url' => 'rdw-api-demo',
+
+    /*
+    |--------------------------------------------------------------------------
+    | Filament config settings
+    |--------------------------------------------------------------------------
+    |
+    | Model field names
+    |
+    */
+
+    'license_plate' => 'licensePlate',
+    'select_endpoints' => 'dataSet'
 ];
