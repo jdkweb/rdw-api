@@ -11,7 +11,7 @@ return [
     | 1 => OverheidIO  https://overheid.io/       (API key needed)
     */
 
-    'rdw_api_use' => 0,
+    'rdw_api_use' => 1,
 
     'rdw_api_use_short' => [
         'opendata',
@@ -31,7 +31,7 @@ return [
     | When needed (for overheid.io)
     */
 
-    'rdw_api_key' => '57b0cfe40746f2ddab489af7fd1fd9ba2cc0618663ad73fc14901687df94337b',
+    'rdw_api_key' => 'key', //'57b0cfe40746f2ddab489af7fd1fd9ba2cc0618663ad73fc14901687df94337b',
 
     /*
     |--------------------------------------------------------------------------
