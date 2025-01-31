@@ -11,7 +11,7 @@ return [
     | 1 => OverheidIO  https://overheid.io/       (API key needed)
     */
 
-    'rdw_api_use' => 1,
+    'rdw_api_use' => 0,
 
     'rdw_api_use_short' => [
         'opendata',
@@ -40,12 +40,15 @@ return [
     |
     | make example (in)active for testing
     |
-    | /rdw-api-demo
+    | /rdw-api/demo             base demo
+    | /rdw-api/filament/demo    demo when filament extension is installed
     |
     */
 
     'rdw_api_demo' => 1,
-    'rdw_api_demo_url' => 'rdw-api-demo',
+    'rdw_api_folder' => 'rdw-api',
+    'rdw_api_filament_folder' => 'filament',
+    'rdw_api_demo_slug' => 'demo',
 
     /*
     |--------------------------------------------------------------------------
