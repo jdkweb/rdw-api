@@ -1,5 +1,5 @@
 # RDW API
-Laravel application to get vehicle information from [opendata.rdw.nl](https://opendata.rdw.nl) or [overheid.io](https://overheid.io).
+Laravel application to get vehicle information from [opendata.rdw.nl](https://opendata.rdw.nl) or [overheid.io](https://overheid.io). \
 This API can be extended to be used in Filament: [rdw-api-filament](https://github.com/jdkweb/rdw-api-filament)
 
 ## 1. Installation
