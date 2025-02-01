@@ -69,6 +69,7 @@ All Rdw endpoints are selecteda and output is an array in local language
   - xml
 - fetch()  
 
+### Example request
 Request:
 ```php
 $result = Rdw::finder()
@@ -115,6 +116,7 @@ Import the rwd-api config
 ```bash
 php artisan vendor:publish --provider="Jdkweb\Rdw\RdwServiceProvider" --tag="config"
 ```
+http://[domainname]/rdw-api/demo
 ```php
 rdw_api_demo => 1,
 ```
