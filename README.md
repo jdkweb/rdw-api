@@ -1,8 +1,14 @@
 # RDW API
 Laravel application to get vehicle information from [opendata.rdw.nl](https://opendata.rdw.nl) or [overheid.io](https://overheid.io). \
 This API can be extended to be used in Filament: [rdw-api-filament](https://github.com/jdkweb/rdw-api-filament)
+---
+1. [Installation](#installation)
+2. [How to use](#How ot use)
+3. [Demo](#demo)
+4. [Extension for Filament](#filament)
+---
 
-## 1. Installation
+## Installation
 
 ### Require with composer
 ```bash
@@ -23,3 +29,9 @@ If you want to use the demo, you need to publish the config, see LINK...
 ```bash
 php artisan vendor:publish --provider="Jdkweb\Rdw\RdwServiceProvider" --tag="lang"
 ```
+
+## How to use
+
+## Demo
+
+## Filament
