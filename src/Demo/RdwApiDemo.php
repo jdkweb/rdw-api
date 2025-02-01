@@ -63,7 +63,7 @@ class RdwApiDemo
                 ->setLicense($licenseplate)
                 ->setEndpoints($this->getTypes())
                 ->translate($this->getLanguage())
-                ->convert($type)
+                ->format($type)
                 ->fetch();
 
             // Change format

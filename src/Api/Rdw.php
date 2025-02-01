@@ -109,7 +109,7 @@ abstract class Rdw
      * @param  string  $type
      * @return Rdw
      */
-    final public function convert(string $type):Rdw
+    final public function format(string $type):Rdw
     {
         // Check type
         $res = array_filter(OutputFormat::cases(), function(OutputFormat $outputFormat) use($type){
