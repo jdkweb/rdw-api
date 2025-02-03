@@ -47,10 +47,12 @@ All RDW endpoints are selected and output is an array in the local language
 ### Options
 #### Select other API
 ```php
-->selectApi(int|string [0|1|opendata|overheid])    
+->selectApi(int|string) // 0|opendata | 1|overheid    
 ```
-- 0 or 'opendata' for using the RDW API opendata.rdw.nl
-- 1 or 'overheid' for using the overheid.io API  
+Can be used to overwrite te config settings 
+- 0 or 'opendata' for using the RDW API opendata.rdw.nl **[default]**
+- 1 or 'overheid' for using the overheid.io API
+
 #### Select endpoints for request 
 ```php
 ->setEndpoints(string|array)
@@ -60,19 +62,27 @@ All RDW endpoints are selected and output is an array in the local language
     ->setEndpoints('vehicle')
     ->setEndpoints(['vehicle','fuel'])
 ```
+Available endpoints (not case sensitive):
+- vehicle
+- vehicle_class
+- fuel
+- bodywork
+- bodywork_specific
+- axles 
+- all **[default]**
 #### Set output language
 ```php
 ->forceTranslation(string)
 ```
 Force output language, so form can be English and RDW response in Dutch. \
 Available:
-  - nl
+  - nl **[default]**
   - en
 #### Format of the response output
 ```php
 ->format(string)
 ```
-- array (default)
+- array **[default]**
 - json
 - xml
 #### Send the request
