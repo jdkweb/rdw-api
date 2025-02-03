@@ -7,13 +7,13 @@ This wrapper can be extended to be used in Filament: [rdw-api-filament](https://
 
 - [Installation](#installation)
 - [Translation](#translation)
-- [How to use](#How ot use)
+- [Usage](#usage)
 - [Demo](#demo)
 - [Extension for Filament](#filament)
 
 
 ## Installation
-Requires PHP 8.2 and Laravel 10 or higher \
+Requires PHP 8.2 and Laravel 10 or higher 
 
 Install the package via composer:
 ```bash
@@ -29,11 +29,11 @@ If changes are needed you can publish the translation files
 # published in: trans/vendor/jdkweb/rdw-api
 php artisan vendor:publish --provider="Jdkweb\Rdw\RdwServiceProvider" --tag="lang"
 ```
-For this package there are two translations:
-- [Dutch (nl)](https://github.com/jdkweb/rdw-api/tree/main/lang/nl)  Default
+Translations available:
+- [Dutch (nl)](https://github.com/jdkweb/rdw-api/tree/main/lang/nl)
 - [English (en)](https://github.com/jdkweb/rdw-api/tree/main/lang/en)
 
-## How to use
+## Usage
 ### Basic usage
 ```php
 use Jdkweb\Rdw\Facades\Rdw;
@@ -42,8 +42,9 @@ $result = Rdw::finder()
     ->setLicense('AB-895-P')
     ->fetch();
 ```
-Request to the active API (is set in the config, default is opendata.rdw.nl) \
-All RDW endpoints are selected and output is an array in the local language
+Request to the active API (in the config, default is opendata.rdw.nl) \
+All RDW endpoints are selected and output is an array
+
 ### Options
 #### Select other API
 ```php
@@ -76,7 +77,7 @@ Available endpoints (not case sensitive):
 ```
 Force output language, so form can be English and RDW response in Dutch. \
 Available:
-  - nl **[default]**
+  - nl 
   - en
 #### Format of the response output
 ```php
