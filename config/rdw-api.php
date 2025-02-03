@@ -39,6 +39,8 @@ return [
     |--------------------------------------------------------------------------
     |
     | make example (in)active for testing
+    | set rdw_api_demo to 1
+    | or add RDW_API_DEMO=1 to .env
     |
     |
     | /rdw-api/demo             base demo
@@ -46,7 +48,7 @@ return [
     |
     */
 
-    'rdw_api_demo' => 1,
+    'rdw_api_demo' => 0,
     'rdw_api_folder' => 'rdw-api',
     'rdw_api_filament_folder' => 'filament',
     'rdw_api_demo_slug' => 'demo',
