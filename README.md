@@ -128,17 +128,18 @@ Rexponse:
 ## Demo
 There is a demo available to test this wrapper \
 Two options to use the demo:
-### .env
-```php
-RDW-API-DEMO=1
-```
-Add this value to .env
-### config
-Import the rwd-api config en set the value to 1
-```php
-rdw_api_demo => 1,
-```
-Demo: 0 = Off | 1 = On
+1. ### .env
+   ```php
+    RDW_API_DEMO=1
+   ```
+   Add this value to .env
+2. ### config
+   Import the rwd-api config en set the value to 1
+   ```php
+    rdw_api_demo => 1,
+   ```
+   Demo: 0 = Off | 1 = On
+
 ### Demo url
 ```html
 http://[domainname]/rdw-api/demo
