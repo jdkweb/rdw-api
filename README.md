@@ -44,14 +44,14 @@ $result = Rdw::finder()
 ```
 Request to the active API (is set in the config, default is opendata.rdw.nl) \
 All RDW endpoints are selected and output is an array in the local language
-## Options
-### Select other API
+### Options
+#### Select other API
 ```php
 ->selectApi(int|string [0|1|opendata|overheid])    
 ```
 - 0 or 'opendata' for using the RDW API opendata.rdw.nl
 - 1 or 'overheid' for using the overheid.io API  
-### Select endpoints for request 
+#### Select endpoints for request 
 ```php
 ->setEndpoints(string|array)
 
@@ -60,7 +60,7 @@ All RDW endpoints are selected and output is an array in the local language
     ->setEndpoints('vehicle')
     ->setEndpoints(['vehicle','fuel'])
 ```
-### Set output language
+#### Set output language
 ```php
 ->forceTranslation(string)
 ```
@@ -68,18 +68,18 @@ Force output language, so form can be English and RDW response in Dutch. \
 Available:
   - nl
   - en
-### Format of the response output
+#### Format of the response output
 ```php
 ->format(string)
 ```
 - array (default)
 - json
 - xml
-### Send the request
+#### Send the request
 ```php
 ->fetch()
 ```
-## Example request
+### Example request
 Request:
 ```php
 $result = Rdw::finder()
