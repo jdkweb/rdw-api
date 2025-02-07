@@ -3,6 +3,7 @@
 namespace Jdkweb\Rdw\Api;
 
 use GuzzleHttp\Client;
+use Illuminate\Support\Facades\Lang;
 use Jdkweb\Rdw\Enums\Endpoints;
 use Jdkweb\Rdw\Enums\OutputFormat;
 use Jdkweb\Rdw\Exceptions\RdwException;
@@ -41,87 +42,71 @@ abstract class Rdw
     protected array $endpoints = [];
 
     /**
-     * Result output array | json | xml
-     * @var OutputFormat
+     * RWD forced output language
+     * @var string
      */
-    protected OutputFormat $output_format = OutputFormat::ARRAY;
+    protected string $language = '';
+
 
     /**
      * API request method
      * @return mixed
      */
-    abstract protected function fetch():string|array;
+    abstract protected function fetch():string|array|null;
+
+    /**
+     * Set HTTP Client for request
+     * @return void
+     */
+    abstract protected function setClient():void;
+
+    //------------------------------------------------------------------------------------------------------------------
 
     public function __construct()
     {
         $this->setClient();
 
+        // default is All
+        $this->endpoints = Endpoints::cases();
+
         // nl default language
-        app()->setFallbackLocale('nl');
+        $this->language = app()->getLocale();
     }
 
-    /**
-     * Set HTTP Client
-     *
-     * @return void
-     */
-    final protected function setClient():void
-    {
-        $this->client = new Client([
-            'base_uri' => rtrim($this->base_uri,"/")."/",
-            'verify' => false,
-            'headers' => [
-                'Content-Type' => 'application/json',
-                'Accept' => 'application/json'
-            ]
-        ]);
-    }
+    //------------------------------------------------------------------------------------------------------------------
 
     /**
      * Set and check for correct types (to call the endpoints)
      *
-     * @param  array  $this->endpoints
+     * @param  array  $endpoints
      * @return Rdw
      */
-    final public function setEndpoints(array $endpoints):Rdw
+    final public function setEndpoints(array $endpoints):static
     {
-        $result = $this->setAllEndpoints($endpoints) || $this->selectEndpoints($endpoints);
+        $this->endpoints = $endpoints;
 
         return $this;
     }
 
+    //------------------------------------------------------------------------------------------------------------------
+
     /**
-     * Force other language
+     * Force output to other language then selected (or local)
+     *
+     * ex. app()->getLocal() = 'en'
+     *     $this->language = 'nl'
+     *     English form -> dutch data output
      *
      * @param  string  $language
      * @return Rdw
      */
-    final public function translate(string $language):Rdw
+    final public function forceTranslation(string $language):static
     {
-        app()->setLocale($language);
-
+        $this->language = $language;
         return $this;
     }
 
-    /**
-     * Set output type
-     *
-     * @param  string  $type
-     * @return Rdw
-     */
-    final public function format(string $type):Rdw
-    {
-        // Check type
-        $res = array_filter(OutputFormat::cases(), function(OutputFormat $outputFormat) use($type){
-            return ($outputFormat->name === strtoupper($type));
-        });
-
-        if(count($res) > 0) {
-            $this->output_format = reset($res);
-        }
-
-        return $this;
-    }
+    //------------------------------------------------------------------------------------------------------------------
 
     /**
      * Validate and set Car-license
@@ -130,7 +115,7 @@ abstract class Rdw
      * @return Rdw
      * @throws RdwException
      */
-    final public function setLicense(string $license):Rdw
+    final public function setLicense(string $license):static
     {
         $license = $this->formatLicense($license);
 
@@ -143,43 +128,11 @@ abstract class Rdw
 
         $this->license = $license;
 
+
         return $this;
     }
 
-    /**
-     * Convert to XML
-     *
-     * @return string
-     */
-    final protected function toXml():string
-    {
-        return ArrayToXml::convert($this->result);
-    }
-
-    /**
-     * Convert to Json
-     *
-     * @param $data
-     * @return string
-     */
-    final protected function toJson(): string
-    {
-        return json_encode($this->result, true);
-    }
-
-    /**
-     * Call convert
-     *
-     * @return string|array
-     */
-    final protected function convertOutput():string|array
-    {
-        return match ($this->output_format) {
-            OutputFormat::XML => $this->toXml(),
-            OutputFormat::JSON => $this->toJson(),
-            default => $this->result,
-        };
-    }
+    //------------------------------------------------------------------------------------------------------------------
 
     /**
      * Translate RDW result array
@@ -187,13 +140,21 @@ abstract class Rdw
      * @param  array  $result
      * @return array
      */
-    final protected function translateOutput(array $result):array
+    final protected function translateOutput(array $result): ?array
     {
         $translation = [];
-        if(app()->getLocale() == 'nl') {
-            foreach ($result as $key=>$row) {
-                $translation[__('rdw-api::enums.' . $key)] = $row;
-            }
+
+        $skip = false;
+        if(app()->getLocale() == $this->language && app()->getLocale() == 'nl') {
+            $skip = true;
+        }
+
+        foreach ($result as $key=>$row) {
+            if(count($row) > 0)
+                $translation[Lang::get('rdw-api::enums.' . $key ,[],$this->language)] = ($skip ? $row : []);
+        }
+
+        if($skip) {
             return $translation;
         }
 
@@ -202,25 +163,26 @@ abstract class Rdw
                 foreach ($row1 as $key2=>$row2) {
                     if(is_array($row2)) {
                         foreach ($row2 as $key3=>$row3) {
-                            $translation[__('rdw-api::enums.' . $key1)]
-                                            [__('rdw-api::axles.as_nummer').($key2+1)]
-                                                [__('rdw-api::' .  strtolower($key1) .".". $key3)] = $row3;
+                            $translation[Lang::get('rdw-api::enums.' . $key1 ,[],$this->language)]
+                                            [Lang::get('rdw-api::axles.as_nummer',[],$this->language) . ($key2+1)]
+                                                [Lang::get('rdw-api::' . strtolower($key1) .".". $key3 ,[],$this->language)] = $row3;
                         }
                     }
                     else {
-                        $translation[__('rdw-api::enums.' . strtoupper($key1))]
-                                        [__('rdw-api::' .  strtolower($key1) .".". $key2) ] = $row2;
+                        $translation[Lang::get('rdw-api::enums.' . strtoupper($key1) ,[],$this->language)]
+                                        [Lang::get('rdw-api::' .  strtolower($key1) .".". $key2 ,[],$this->language)] = $row2;
                     }
                 }
             }
             else {
-                $translation[__('rdw-api::enums.' . $key1)] = [];
+                $translation[Lang::get('rdw-api::enums.' . $key1 ,[],$this->language)] = [];
             }
         }
 
-        return $translation;
+        return (count($translation) == 0 ? null : $translation);
     }
 
+    //------------------------------------------------------------------------------------------------------------------
 
     /**
      * License [A-Z0-9] uppercase
@@ -235,31 +197,40 @@ abstract class Rdw
         return strtoupper($license);
     }
 
+    //------------------------------------------------------------------------------------------------------------------
+
     /**
      * Select 1 or more endpoints
      *
-     * @param  array  $endpoints
+     * @param  array  $endpoints array with strings or array with endpoints
      * @return bool
      */
     final protected function selectEndpoints(array $endpoints):bool
     {
-        $this->endpoints = array_filter($endpoints, function ($type) {
-            return in_array(strtoupper($type),Endpoints::names());
-        });
+        $this->endpoints =array_filter(array_map(function($endpoint){
+            if(!$endpoint instanceof Endpoints && is_string($endpoint)) {
+                return Endpoints::getCase($endpoint);
+            }
+            else {
+                return $endpoint;
+            }
+        }, $endpoints), fn($endpoint) => in_array($endpoint, Endpoints::cases()));
 
         return count($this->endpoints) > 0;
     }
 
+    //------------------------------------------------------------------------------------------------------------------
+
     /**
      * Select ALL form all Endpoints
      *
-     * @param  array  $endpoints
+     * @param  array  $endpoints array with strings or array with endpoints
      * @return bool
      */
     final protected function setAllEndpoints(array $endpoints): bool
     {
-        if(count($endpoints) == 1 && strtoupper($endpoints[0]) == 'ALL') {
-            $this->endpoints = Endpoints::names();
+        if(count($endpoints) == 1 && is_string($endpoints[0]) && strtoupper($endpoints[0]) == 'ALL') {
+            $this->endpoints = Endpoints::cases();
             return true;
         }
 

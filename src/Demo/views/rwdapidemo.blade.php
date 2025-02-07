@@ -49,15 +49,15 @@
                         <div class="py-4">
                             <label
                                 class="block font-semibold pl-1 pb-1.5">{{ __('rdw-api::form.selectdatasetLabel') }}</label>
-                            <select name="settypes[]"
-                                    id="settypes"
+                            <select name="endpoints[]"
+                                    id="endpoints"
                                     style="background-image: none"
                                     class="border rounded h-40 py-3 px-3 w-full"
                                     required
                                     multiple>
-                                @foreach($types as $type)
+                                @foreach(Jdkweb\Rdw\Enums\Endpoints::cases() as $type)
                                     <option
-                                        value="{{ $type->name }}" {{ (in_array($type->name, $settypes) ? 'selected':'') }}>
+                                        value="{{ $type->value }}" {{ (in_array($type->value, $endpoints) ? 'selected':'') }}>
                                         {{ $type->getLabel() }}
                                     </option>
                                 @endforeach
@@ -65,20 +65,22 @@
                         </div>
                         <div class="pb-4">
                             <input type="checkbox"
-                                   {{ ($all?'checked':'') }}
-                                   onclick="[].forEach.call(document.getElementById('settypes').options,(i)=>{i.selected=this.checked})"
+                                   {{ ($allEndpoints ? 'checked':'') }}
+                                   onclick="[].forEach.call(document.getElementById('endpoints').options,(i)=>{i.selected=this.checked})"
                                    class="w-4 mr-4"
-                                   name="all"
+                                   name="allEndpoints"
                                    value="1"/><span class="text-lg">{{ __('rdw-api::form.selectallLabel') }}</span>
                         </div>
                         <div>
                             <label class="block font-semibold pl-1 pb-1.5">{{ __('rdw-api::form.formatLabel') }}</label>
-                            <select name="output"
+                            <select name="outputformat"
                                     class="border rounded w-full h-12 px-4"
                                     required>
-                                <option value="array" {{ ($output=='array'?'selected':'') }} >Array</option>
-                                <option value="json" {{ ($output=='json'?'selected':'') }}>Json</option>
-                                <option value="xml" {{ ($output=='xml'?'selected':'') }}>XML</option>
+                                @foreach(Jdkweb\Rdw\Enums\OutputFormat::cases() as $format)
+                                    <option value="{{ $format->name }}" {{ ($outputformat == $format->name ? 'selected' : '' ) }} >
+                                        {{ $format->getLabel()  }}
+                                    </option>
+                                @endforeach
                             </select>
                         </div>
                     </fieldset>
@@ -89,6 +91,7 @@
                     </div>
                 </form>
             </div>
+            @if($filamentInstalled)
             <input type="radio" name="tabs" id="tab2"
                    value="2"
                    class="hidden [&:checked+label]:bg-white [&:checked+label+div]:block">
@@ -96,15 +99,16 @@
                    class="order-1 px-4 py-4 mr-1 rounded rounded-b-none cursor-pointer font-semibold bg-gray-200 transition">
                 Filament Forms<span class="block text-center text-sm font-normal">Laravel/Filament</span>
             </label>
+            @endif
             <div class="order-last p-4 bg-white w-full rounded rounded-tl-none transition">
             </div>
         </div>
         @if(!empty($results))
-            @if($output == 'json')
+            @if($outputformat == 'JSON')
                 <x-json  :results="$results" />
-            @elseif($output == 'xml')
+            @elseif($outputformat == 'XML')
                 <x-xml  :results="$results" />
-            @elseif($output == 'array')
+            @elseif($outputformat == 'ARRAY')
                 <x-array :results="$results" />
             @endif
         @endif

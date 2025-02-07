@@ -2,7 +2,9 @@
 
 namespace Jdkweb\Rdw\Enums;
 
-enum Endpoints: string
+use Filament\Support\Contracts\HasLabel;
+
+enum Endpoints: string implements HasLabel
 {
     // Select option values
     case VEHICLE = 'm9d7-ebf2.json';
@@ -47,20 +49,20 @@ enum Endpoints: string
         };
     }
 
-    static public function getOptions(array $names = [], bool $shortname = false): array
-    {
-        $options = [];
-        foreach (self::cases() as $case) {
-            if(empty($names) || in_array($case->name, $names)) {
-                $options[$case->name] = (!$shortname ? $case->getLabel() : $case->getName());
-            }
-        }
-        return $options;
-    }
+//    static public function getOptions(array $names = [], bool $shortname = false): array
+//    {
+//        $options = [];
+//        foreach (self::cases() as $case) {
+//            if(empty($names) || in_array($case->name, $names)) {
+//                $options[$case->name] = (!$shortname ? $case->getLabel() : $case->getName());
+//            }
+//        }
+//        return $options;
+//    }
 
     public static function getCase(string $type): ?Endpoints
     {
-        $arr = array_filter(self::cases(), fn($enum) => ($type == $enum->name));
+        $arr = array_filter(self::cases(), fn($enum) => (strtoupper($type) === $enum->name || $type === $enum->value));
 
         if(count($arr)==0) return null;
 

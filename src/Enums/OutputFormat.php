@@ -2,7 +2,9 @@
 
 namespace Jdkweb\Rdw\Enums;
 
-enum OutputFormat: string
+use Filament\Support\Contracts\HasLabel;
+
+enum OutputFormat: string implements HasLabel
 {
     case ARRAY = 'array';
     case JSON = 'json';
@@ -22,18 +24,15 @@ enum OutputFormat: string
         };
     }
 
-    static public function getOptions(bool $shortname = false): array
+    public static function getCase(OutputFormat|string $type): OutputFormat
     {
-        $options = [];
-        foreach (self::cases() as $case) {
-            $options[$case->name] = $case->getLabel();
+        if($type instanceof OutputFormat) {
+            return $type;
         }
-        return $options;
-    }
 
-    public static function getCase(string $type): OutputFormat
-    {
         $arr = array_filter(self::cases(), fn($enum) => ($type == $enum->name));
+
+        if(empty($arr)) return self::ARRAY;
 
         return reset($arr);
     }

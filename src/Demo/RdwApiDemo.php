@@ -4,11 +4,13 @@ namespace Jdkweb\Rdw\Demo;
 
 use Illuminate\Support\Facades\View as SetView;
 use Illuminate\View\View;
-use Jdkweb\Rdw\Facades\Rdw;
+use Jdkweb\Rdw\Enums\OutputFormat;
 use Jdkweb\Rdw\Enums\Endpoints;
+use Jdkweb\Rdw\Controllers\RdwApiRequest;
 
 class RdwApiDemo
 {
+
     public function __construct()
     {
         $this->setLanguage();
@@ -17,12 +19,14 @@ class RdwApiDemo
         SetView::addLocation(__DIR__ . '/views/');
     }
 
+    //------------------------------------------------------------------------------------------------------------------
+
     /**
      * Set language with part of the uri
      *
      * @return void
      */
-    protected function setLanguage():void
+    final protected function setLanguage():void
     {
         $language = app()->getLocale();
         if(preg_match("/^" . config('rdw-api.rdw_api_folder') . "\/". config('rdw-api.rdw_api_demo_slug') . "\/(nl|en)$/", request()->path())) {
@@ -31,19 +35,19 @@ class RdwApiDemo
         app()->setLocale($language);
     }
 
+    //------------------------------------------------------------------------------------------------------------------
+
     /**
      * Handle post form
      *
      * @return array|string|null
-     * @throws \Psr\Container\ContainerExceptionInterface
-     * @throws \Psr\Container\NotFoundExceptionInterface
      */
-    protected function handleForm():array|string|null
+    final protected function handleForm():array|string|null
     {
         $result = null;
 
         // Types (endpoints) selected
-        if(count($this->getTypes()) < 1) return $result;
+        if(count($this->getEndpoints()) < 1) return $result;
 
         // Is licenseplate set
         if(($licenseplate = request()->get('licenseplate'))) {
@@ -55,65 +59,99 @@ class RdwApiDemo
                 return $result;
             }
 
-            // Output format
-            $type = $this->getOutputFormat();
+            // Call API Wrapper
+            $result = RdwApiRequest::make()
+                ->setLicenseplate($licenseplate)
+                ->setEndpoints($this->getEndpoints())
+                //->setEndpoints(['vehicle','AXLES','8ys7-d773.json'])
+                ->setLanguage($this->getLanguage())
+                ->setOutputformat($this->getOutputFormat())
+                //->setOutputformat(OutputFormat::JSON)
+                ->rdwApiRequest()
+                ->get();
+                //->output;
 
-            // Call Api
-            $result = Rdw::finder()
-                ->setLicense($licenseplate)
-                ->setEndpoints($this->getTypes())
-                ->translate($this->getLanguage())
-                ->format($type)
-                ->fetch();
-
-            // Change format
-            if($type == "xml") {
-                $result = $this->formatXML($result);
-            }
+            // Create output by format
+            $result = match ($this->getOutputFormat()) {
+                OutputFormat::XML->name => $result->toXml(true),
+                OutputFormat::JSON->name => $result->toJson(),
+                Default => $result->toArray(),
+            };
         }
 
         return $result;
     }
 
-    protected function formatXml(string $result): string
-    {
-        $dom = new \DOMDocument();
-        $dom->preserveWhiteSpace = false;
-        $dom->formatOutput = true;
-        $dom->loadXML($result);
-        return htmlentities($dom->saveXML($dom->documentElement));
-    }
+    //------------------------------------------------------------------------------------------------------------------
 
-    protected function getLanguage():string
+    /**
+     * Set language to force output result language
+     *
+     * @return string
+     */
+    final protected function getLanguage():string
     {
         return request()->get('language') ?? app()->getLocale();
     }
 
-    protected function getTypes():array
+    //------------------------------------------------------------------------------------------------------------------
+
+    /**
+     * Selected Endpoints
+     *
+     * @return array
+     */
+    final protected function getEndpoints():array
     {
-        return ($this->allTypes() ? Endpoints::names() : request()->get('settypes') ?? []);
+        if($this->allEndpoints()) return Endpoints::values();
+
+        $endpoints  = request()->get('endpoints') ?? [];
+
+        // Check
+        return array_filter(Endpoints::values(), function ($value) use ($endpoints) {
+            return in_array($value, $endpoints);
+        });
     }
 
-    protected function allTypes():bool
+    //------------------------------------------------------------------------------------------------------------------
+
+    /**
+     * Select all endpoints
+     *
+     * @return bool
+     */
+    final protected function allEndpoints():bool
     {
-        return request()->get('all') ?? 0;
+        return request()->get('allEndpoints') ?? 0;
     }
 
-    protected function getOutputFormat():string
+    //------------------------------------------------------------------------------------------------------------------
+
+    /**
+     * Show this output format, array preset
+     *
+     * @return string
+     */
+    final protected function getOutputFormat():string
     {
-        return request()->get('output') ?? 'array';
+        $output = request()->get('outputformat') ?? 'ARRAY';
+
+        // Check
+        return OutputFormat::getCase($output)?->name ?? 'ARRAY';
     }
 
-    public function showForm(): View
+    //------------------------------------------------------------------------------------------------------------------
+
+    final public function showForm(): View
     {
         return view('rwdapidemo',[
-            'types' => Endpoints::cases(),
-            'licenseplate' => request()->get('licenseplate'),
+            'allEndpoints' => (bool) $this->allEndpoints(),
+            'endpoints' => (array) $this->getEndpoints(),
+            'licenseplate' => (string) request()->get('licenseplate'),
+            'language' => (string) $this->getLanguage(),
+            'outputformat' => (string) $this->getOutputFormat(),
             'results'=> $this->handleForm(),
-            'language' => $this->getLanguage(),
-            'output' => $this->getOutputFormat(),
-            'all' => $this->allTypes(),
-            'settypes' => $this->getTypes()
+            'filamentInstalled' => (bool) !(\Composer\InstalledVersions::isInstalled('Jdkweb/rdw-api-filament'))
         ]);
     }
 }

@@ -2,6 +2,7 @@
 
 namespace Jdkweb\Rdw\Api;
 
+use GuzzleHttp\Client;
 use GuzzleHttp\Exception\ClientException;
 use GuzzleHttp\Exception\GuzzleException;
 use Jdkweb\Rdw\Exceptions\RdwException;
@@ -12,37 +13,51 @@ class OpendataRdw extends Rdw implements RdwApi
 {
     protected string $base_uri = "https://opendata.rdw.nl/resource/";
 
+    //------------------------------------------------------------------------------------------------------------------
+
+    /**
+     * Set HTTP Client
+     *
+     * @return void
+     */
+    final public function setClient():void
+    {
+        $this->client = new Client([
+            'base_uri' => rtrim($this->base_uri,"/")."/",
+            'verify' => false,
+            'headers' => [
+                'Content-Type' => 'application/json',
+                'Accept' => 'application/json'
+            ]
+        ]);
+    }
+
+    //------------------------------------------------------------------------------------------------------------------
+
     /**
      * Fetch the Rdw results
      *
-     * @return string|array
+     * @return string|array|null
      * @throws RdwException
      */
-    final public function fetch():string|array
+    final public function fetch():string|array|null
     {
-        foreach ($this->endpoints as $type) {
-
-            // Endpoint type
-            $type = strtoupper($type);
+        foreach ($this->endpoints as $endpoint) {
 
             // Check endpoint exists
-            if (!in_array($type,Endpoints::names())) {
+            if (!$endpoint instanceof Endpoints) {
                 continue;
             }
-
-            // Actual endpoint
-            $endpoint = Endpoints::getCase($type);
 
             // Request
             $this->result[$endpoint->name] = $this->getRequest($endpoint) ?? [];
         }
 
         // Translation when needed
-        $this->result = $this->translateOutput($this->result);
-
-        // Output converted to type
-        return $this->convertOutput();
+        return $this->translateOutput($this->result);
     }
+
+    //------------------------------------------------------------------------------------------------------------------
 
     /**
      * @param $endpoint
@@ -77,5 +92,4 @@ class OpendataRdw extends Rdw implements RdwApi
             ]));
         }
     }
-
 }
