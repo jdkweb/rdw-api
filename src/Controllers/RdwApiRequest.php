@@ -11,14 +11,30 @@ use Spatie\ArrayToXml\ArrayToXml;
 
 class RdwApiRequest
 {
+    /**
+     * Callable setters and getters
+     * @var array|string[]
+     */
     private array $properties = ['licenseplate', 'language', 'outputformat', 'endpoints', 'result'];
 
+    /**
+     * Values for API request
+     * @var string|null
+     */
     private ?string $licenseplate = null;
     private ?array $endpoints = null;
     private ?string $language = null;
     private OutputFormat|null $outputformat = null;
+
+    /**
+     * Result API request
+     * @var array|string|null
+     */
     private array|string|null $result = null;
 
+    /**
+     * @var RdwApiRequest|null
+     */
     private static ?RdwApiRequest $instance = null;
 
     public static function make(): static
@@ -51,6 +67,11 @@ class RdwApiRequest
 
     //------------------------------------------------------------------------------------------------------------------
 
+    /**
+     * Order result
+     *
+     * @return RdwApiResponse
+     */
     final public function get(): RdwApiResponse
     {
         $result = new RdwApiResponse();
@@ -78,7 +99,6 @@ class RdwApiRequest
 
     //------------------------------------------------------------------------------------------------------------------
 
-
     /**
      * Getters / Setters for properties
      * @param  string  $name
@@ -104,12 +124,28 @@ class RdwApiRequest
         return $this;
     }
 
+    //------------------------------------------------------------------------------------------------------------------
+
+    /**
+     * OutputFormat for result API request
+     *
+     * @param  OutputFormat|string  $type
+     * @return $this
+     */
     final public function setOutputformat(OutputFormat|string $type): static
     {
         $this->outputformat = ($type instanceof OutputFormat ? $type : OutputFormat::getCase($type));
         return $this;
     }
 
+    //------------------------------------------------------------------------------------------------------------------
+
+    /**
+     * Endpoints used for the request
+     *
+     * @param  array  $endpoints
+     * @return $this
+     */
     final public function setEndpoints(array $endpoints = []): static
     {
         $this->endpoints = array_map(function ($endpoint) {
@@ -120,6 +156,13 @@ class RdwApiRequest
 
     //------------------------------------------------------------------------------------------------------------------
 
+    /**
+     * Get settings from the filament form
+     *
+     * @param  Form  $form
+     * @return $this
+     * @throws RdwException
+     */
     final public function setFormData(Form $form): static
     {
         $data = $form->getState();
@@ -158,19 +201,6 @@ class RdwApiRequest
 
         return $licenseplate;
     }
-
-    //------------------------------------------------------------------------------------------------------------------
-
-//    /**
-//     * Get enum endpoints
-//     * @return array
-//     */
-//    public function getEndpoints(): array
-//    {
-//        return array_map(function ($endpoint) {
-//            return Endpoints::getCase($endpoint);
-//        }, $this->endpoints);
-//    }
 
     //------------------------------------------------------------------------------------------------------------------
 
