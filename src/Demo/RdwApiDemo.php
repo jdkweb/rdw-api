@@ -71,30 +71,14 @@ class RdwApiDemo
                 return $result;
             }
 
-            $result = RdwApiRequest::make()
-               // ->setAPI('overheidio')
-                ->setLicenseplate($licenseplate)
-                //->setEndpoints($this->getEndpoints())
-                ->setEndpoints(['vehicle','axles'])
-                ->setOutputformat($this->getOutputFormat())
-                ->setLanguage('nl')
-                ->fetch(false);
-
             // Call API Wrapper
-//            $result = RdwApiRequest::make()
-//                ->setLicenseplate($licenseplate)
-//                ->setEndpoints($this->getEndpoints())
-//                //->setEndpoints(['vehicle','AXLES','8ys7-d773.json'])
-//                ->setLanguage($this->getLanguage())
-//                ->setOutputformat($this->getOutputFormat())
-//                //->setOutputformat(OutputFormat::JSON)
-//                ->rdwApiRequest()
-//                ->get();
-//                //->output;
+            $result = RdwApiRequest::make()
+                ->setLicenseplate($licenseplate)
+                ->setEndpoints($this->getEndpoints())
+                ->setLanguage($this->getLanguage())
+                ->fetch();
 
-            dd($result);
-
-//            // Create output by format
+            // Create output by format
             $result = match ($this->getOutputFormat()) {
                 OutputFormat::XML->name => $result->toXml(true),
                 OutputFormat::JSON->name => $result->toJson(),

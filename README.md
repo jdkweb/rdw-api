@@ -1,5 +1,7 @@
 # RDW API
 
+Laravel wrapper for the Dutch open mobility data. Basic Vehicle Registration All non-sensitive data of the Dutch vehicle fleet. \
+
 Laravel application to get vehicle information from [opendata.rdw.nl](https://opendata.rdw.nl) or [overheid.io](https://overheid.io). \
 This wrapper can be extended to be used in Filament: [rdw-api-filament](https://github.com/jdkweb/rdw-api-filament)
 
@@ -84,7 +86,7 @@ With or without hyphen-minus
 #### Select endpoints for request 
 ```php
 use \Jdkweb\Rdw\Enums\Endpoints;
-
+...
 ->setEndpoints(array)
 
 # examples
@@ -115,7 +117,7 @@ Available endpoints (not case sensitive):
 #### Format of the response output
 ```php
 use \Jdkweb\Rdw\Enums\OutputFormat
-
+...
 ->setOuputformat(string|OutputFormat)
 
 # examples
@@ -174,8 +176,9 @@ Get specific values form response data
 $result->quickSearch(string $keyname, ?int $axle = null) // Keynames are Dutch
 
 # examples
-    $result->quickSearch('merk')
-    $result->quickSearch('spoorbreedte',1)
+    $result->quickSearch('merk')            // TOYOTA
+    $result->quickSearch('voertuigsoort')   // Personenauto
+    $result->quickSearch('spoorbreedte',1)  // 147
 ```
 
 ### Example request
@@ -238,7 +241,11 @@ Two options to use the demo:
 http://[domainname]/rdw-api/demo
 ```
 
-## Changing Default API
+## API
+Changing Default API\
+- 0: [opendata.rdw.nl](https://opendata.rdw.nl) 
+- 1: [overheid.io](https://overheid.io)
+
 Use setApi method in request
 ```php
 ->setApi(int $apiKey)
@@ -246,8 +253,8 @@ Use setApi method in request
 Or import the rwd-api config ([Installation](#installation)) \
 And set 'rdw_api_use' to the correct value 
 
-To use https://overheid.io a token is needed \  
-Set 'rdw_api_key' when you ise it.
+> To use https://overheid.io a token is needed \  
+Place the token in the config: 'rdw_api_key'.
 
 ## Filament
 To use this wrapper in [Filament](https://filamentphp.com/) install the filament extension
