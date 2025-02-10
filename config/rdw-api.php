@@ -15,7 +15,7 @@ return [
 
     'rdw_api_use_short' => [
         'opendata',
-        'overheid'
+        'overheidio'
     ],
 
     'rdw_api_namespace' => [

@@ -5,9 +5,7 @@ namespace Jdkweb\Rdw\Api;
 use GuzzleHttp\Client;
 use Illuminate\Support\Facades\Lang;
 use Jdkweb\Rdw\Enums\Endpoints;
-use Jdkweb\Rdw\Enums\OutputFormat;
 use Jdkweb\Rdw\Exceptions\RdwException;
-use Spatie\ArrayToXml\ArrayToXml;
 
 abstract class Rdw
 {
@@ -100,7 +98,7 @@ abstract class Rdw
      * @param  string  $language
      * @return Rdw
      */
-    final public function forceTranslation(string $language):static
+    final public function setTranslation(string $language):static
     {
         $this->language = $language;
         return $this;
@@ -145,37 +143,38 @@ abstract class Rdw
         $translation = [];
 
         $skip = false;
-        if(app()->getLocale() == $this->language && app()->getLocale() == 'nl') {
+        if (app()->getLocale() == $this->language && app()->getLocale() == 'nl') {
             $skip = true;
         }
 
-        foreach ($result as $key=>$row) {
-            if(count($row) > 0)
-                $translation[Lang::get('rdw-api::enums.' . $key ,[],$this->language)] = ($skip ? $row : []);
+        foreach ($result as $key => $row) {
+            if (count($row) > 0) {
+                $translation[Lang::get('rdw-api::enums.' . $key, [], $this->language)] = ($skip ? $row : []);
+            }
         }
 
-        if($skip) {
+        if ($skip) {
             return $translation;
         }
 
-        foreach ($result as $key1=>$row1) {
-            if(is_array($row1)) {
-                foreach ($row1 as $key2=>$row2) {
-                    if(is_array($row2)) {
-                        foreach ($row2 as $key3=>$row3) {
-                            $translation[Lang::get('rdw-api::enums.' . $key1 ,[],$this->language)]
-                                            [Lang::get('rdw-api::axles.as_nummer',[],$this->language) . ($key2+1)]
-                                                [Lang::get('rdw-api::' . strtolower($key1) .".". $key3 ,[],$this->language)] = $row3;
+        foreach ($result as $key1 => $row1) {
+            if (is_array($row1)) {
+                foreach ($row1 as $key2 => $row2) {
+                    if (is_array($row2)) {
+                        foreach ($row2 as $key3 => $row3) {
+                            $translation
+                            [Lang::get('rdw-api::enums.' . $key1, [], $this->language)]
+                            [Lang::get('rdw-api::axles.as_nummer', [], $this->language) . ($key2+1)]
+                            [Lang::get('rdw-api::' . strtolower($key1) .".". $key3, [], $this->language)] = $row3;
                         }
-                    }
-                    else {
-                        $translation[Lang::get('rdw-api::enums.' . strtoupper($key1) ,[],$this->language)]
-                                        [Lang::get('rdw-api::' .  strtolower($key1) .".". $key2 ,[],$this->language)] = $row2;
+                    } else {
+                        $translation
+                        [Lang::get('rdw-api::enums.' . strtoupper($key1), [], $this->language)]
+                        [Lang::get('rdw-api::' .  strtolower($key1) .".". $key2, [], $this->language)] = $row2;
                     }
                 }
-            }
-            else {
-                $translation[Lang::get('rdw-api::enums.' . $key1 ,[],$this->language)] = [];
+            } else {
+                $translation[Lang::get('rdw-api::enums.' . $key1, [], $this->language)] = [];
             }
         }
 
@@ -207,11 +206,10 @@ abstract class Rdw
      */
     final protected function selectEndpoints(array $endpoints):bool
     {
-        $this->endpoints =array_filter(array_map(function($endpoint){
-            if(!$endpoint instanceof Endpoints && is_string($endpoint)) {
+        $this->endpoints =array_filter(array_map(function ($endpoint) {
+            if (!$endpoint instanceof Endpoints && is_string($endpoint)) {
                 return Endpoints::getCase($endpoint);
-            }
-            else {
+            } else {
                 return $endpoint;
             }
         }, $endpoints), fn($endpoint) => in_array($endpoint, Endpoints::cases()));
@@ -229,7 +227,7 @@ abstract class Rdw
      */
     final protected function setAllEndpoints(array $endpoints): bool
     {
-        if(count($endpoints) == 1 && is_string($endpoints[0]) && strtoupper($endpoints[0]) == 'ALL') {
+        if (count($endpoints) == 1 && is_string($endpoints[0]) && strtoupper($endpoints[0]) == 'ALL') {
             $this->endpoints = Endpoints::cases();
             return true;
         }

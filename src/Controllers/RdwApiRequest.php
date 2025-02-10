@@ -2,12 +2,12 @@
 
 namespace Jdkweb\Rdw\Controllers;
 
+use Filament\Facades\Filament;
 use Filament\Forms\Form;
 use Jdkweb\Rdw\Enums\Endpoints;
 use Jdkweb\Rdw\Enums\OutputFormat;
 use Jdkweb\Rdw\Exceptions\RdwException;
 use Jdkweb\Rdw\Filament\Forms\Components\RdwApiLicenseplate;
-use Spatie\ArrayToXml\ArrayToXml;
 
 class RdwApiRequest
 {
@@ -15,16 +15,17 @@ class RdwApiRequest
      * Callable setters and getters
      * @var array|string[]
      */
-    private array $properties = ['licenseplate', 'language', 'outputformat', 'endpoints', 'result'];
+    //private array $properties = ['licenseplate', 'language', 'outputformat', 'endpoints', 'result'];
 
     /**
      * Values for API request
      * @var string|null
      */
-    private ?string $licenseplate = null;
-    private ?array $endpoints = null;
-    private ?string $language = null;
-    private OutputFormat|null $outputformat = null;
+    protected int $api = 0;
+    protected ?string $licenseplate = null;
+    protected ?array $endpoints = null;
+    protected string $language;
+    protected ?OutputFormat $outputformat = null;
 
     /**
      * Result API request
@@ -35,13 +36,17 @@ class RdwApiRequest
     /**
      * @var RdwApiRequest|null
      */
-    private static ?RdwApiRequest $instance = null;
+    private static RdwApiRequest|null $instance = null;
 
     public static function make(): static
     {
         // Singleton
         if (is_null(self::$instance)) {
             self::$instance = new self();
+            // Default settings
+            self::$instance->endpoints = Endpoints::cases();
+            self::$instance->language = app()->getLocale();
+            //self::$instance->outputformat = OutputFormat::ARRAY;
         }
 
         return self::$instance;
@@ -54,15 +59,15 @@ class RdwApiRequest
      *
      * @return array|string
      */
-    final public function rdwApiRequest(): static
+    public function fetch(?bool $raw = null): RdwApiResponse|static
     {
-        $this->result = \Jdkweb\Rdw\Facades\Rdw::finder()
+        $this->result = \Jdkweb\Rdw\Facades\Rdw::finder($this->getApi())
             ->setLicense($this->licenseplate)
             ->setEndpoints($this->endpoints)
-            ->forceTranslation($this->language)
+            ->setTranslation($this->language)
             ->fetch();
 
-        return $this;
+        return (is_null($raw) || !$raw ? $this->get() : $this);
     }
 
     //------------------------------------------------------------------------------------------------------------------
@@ -72,25 +77,24 @@ class RdwApiRequest
      *
      * @return RdwApiResponse
      */
-    final public function get(): RdwApiResponse
+    public function get(): RdwApiResponse
     {
         $result = new RdwApiResponse();
 
         $result->request = (object) array(
             'licenseplate' => $this->licenseplate,
             'endpoints' => $this->getEndpoints(),
-            'language' => $this->language,
-            'outputformat' => $this->outputformat,
+            'language' => $this->language
         );
         $result->response = $this->result ?? [];
         $result->status = $this->status($result);
-        $result->output = '';
 
-        if(!is_null($this->outputformat) && count($result->response) > 0) {
+        if (!is_null($this->outputformat) && count($result->response) > 0) {
+            $result->request->outputformat = $this->outputformat;
             $result->output = match ($this->outputformat) {
                 OutputFormat::XML => $result->toXml(true),
                 OutputFormat::JSON => $result->toJson(),
-                Default => $result->toArray(),
+                default => $result->toArray(),
             };
         }
 
@@ -100,27 +104,46 @@ class RdwApiRequest
     //------------------------------------------------------------------------------------------------------------------
 
     /**
-     * Getters / Setters for properties
-     * @param  string  $name
-     * @param  array  $arguments
-     * @return mixed
+     * @param  string  $licenseplate
+     * @return $this
      */
-    public function __call(string $name, array $arguments): mixed
+    public function setAPI(string|int $api): static
     {
-        if (!preg_match('/^(set|get)[A-Z]{1}(\w+)$/', $name)) {
-            return $this;
+        if(!is_numeric($api)) {
+            $r = array_flip(config('rdw-api.rdw_api_use_short'));
+            if(isset($r[$api])) {
+                $api = $r[$api];
+            }
+            else {
+                $api = 0;
+            }
         }
 
-        $action = substr(strtolower($name), 0,3);
-        $name = substr(strtolower($name), 3);
+        $this->api = $api;
+        return $this;
+    }
 
-        // getter
-        if($action === 'get') return $this->{strtolower($name)};
+    /**
+     * @param  string  $licenseplate
+     * @return $this
+     */
+    public function setLicenseplate(string $licenseplate): static
+    {
+        $this->licenseplate = $licenseplate;
+        return $this;
+    }
 
-        // setter
-        if (in_array($name, $this->properties)) {
-            $this->{strtolower($name)} = reset($arguments);
-        }
+    //------------------------------------------------------------------------------------------------------------------
+
+    /**
+     * Force other language output than te selected language
+     *
+     * @param  string  $language
+     * @return $this
+     */
+    public function setLanguage(string $language): static
+    {
+        $this->language = $language;
         return $this;
     }
 
@@ -132,7 +155,7 @@ class RdwApiRequest
      * @param  OutputFormat|string  $type
      * @return $this
      */
-    final public function setOutputformat(OutputFormat|string $type): static
+    public function setOutputformat(OutputFormat|string $type): static
     {
         $this->outputformat = ($type instanceof OutputFormat ? $type : OutputFormat::getCase($type));
         return $this;
@@ -146,7 +169,7 @@ class RdwApiRequest
      * @param  array  $endpoints
      * @return $this
      */
-    final public function setEndpoints(array $endpoints = []): static
+    public function setEndpoints(array $endpoints = []): static
     {
         $this->endpoints = array_map(function ($endpoint) {
             return ($endpoint instanceof Endpoints ? $endpoint : Endpoints::getCase($endpoint));
@@ -157,49 +180,74 @@ class RdwApiRequest
     //------------------------------------------------------------------------------------------------------------------
 
     /**
-     * Get settings from the filament form
-     *
-     * @param  Form  $form
+     * @param  array  $result
      * @return $this
-     * @throws RdwException
      */
-    final public function setFormData(Form $form): static
+    public function setResult(array|string $result): static
     {
-        $data = $form->getState();
-        $rdwApiLicenseplate = $this->getComponent($form);
-        $licensePlateName = $rdwApiLicenseplate->getStatePath(false);
-
-        // Set data for RDW request
-        $this->licenseplate = $data[$licensePlateName];
-        $this->outputformat = $rdwApiLicenseplate->getOutputFormat();
-        $this->language = $rdwApiLicenseplate->getLanguage();
-
-        return $this->setEndpoints($rdwApiLicenseplate->getDataset());
+        $this->result = $result;
+        return $this;
     }
 
     //------------------------------------------------------------------------------------------------------------------
 
-    final protected function getComponent(Form $form): RdwApiLicenseplate
+    /**
+     * @return int
+     */
+    public function getApi(): int
     {
-        $components = $form->getFlatComponents();
+        return $this->api;
+    }
 
-        $licenseplate = null;
+    //------------------------------------------------------------------------------------------------------------------
 
-        foreach ($components as $component) {
-            if ($component instanceof RdwApiLicenseplate) {
-                $licenseplate =& $component;
-                break;
-            }
-        }
+    /**
+     * @return string|null
+     */
+    public function getLicenseplate(): ?string
+    {
+        return $this->licenseplate;
+    }
 
-        if (is_null($licenseplate)) {
-            throw new RdwException(__('rdw-api::errors.component_error', [
-                'class' => self::class,
-                'component' => RdwApiLicenseplate::class
-            ]));
-        }
+    //------------------------------------------------------------------------------------------------------------------
 
-        return $licenseplate;
+    /**
+     * @return string
+     */
+    public function getLanguage(): string
+    {
+        return $this->language ?? app()->getLocale();
+    }
+
+    //------------------------------------------------------------------------------------------------------------------
+
+    /**
+     * @return string
+     */
+    public function getOutputformat(): string
+    {
+        return $this->outputformat ?? OutputFormat::ARRAY;
+    }
+
+    //------------------------------------------------------------------------------------------------------------------
+
+    /**
+     * @return array|null
+     */
+    public function getEndpoints(): ?array
+    {
+        return $this->endpoints;
+    }
+
+    //------------------------------------------------------------------------------------------------------------------
+
+    /**
+     * @param  array  $result
+     * @return $this
+     */
+    public function getResult(): array|string|null
+    {
+        return $this->result;
     }
 
     //------------------------------------------------------------------------------------------------------------------
@@ -209,7 +257,7 @@ class RdwApiRequest
      *
      * @return $this
      */
-    final public function status(RdwApiResponse $request): bool
+    public function status(RdwApiResponse $request): bool
     {
         return match ($this->outputformat) {
             OutputFormat::JSON => json_validate($request->toJson()),

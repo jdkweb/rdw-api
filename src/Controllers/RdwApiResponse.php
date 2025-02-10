@@ -2,7 +2,6 @@
 
 namespace Jdkweb\Rdw\Controllers;
 
-use Jdkweb\Rdw\Enums\Endpoints;
 use Spatie\ArrayToXml\ArrayToXml;
 
 class RdwApiResponse
@@ -23,7 +22,7 @@ class RdwApiResponse
      * Prepared output, when is set in request
      * @var array|string
      */
-    public array|string $output;
+    public array|string $output = '';
 
     /**
      * Request status
@@ -39,7 +38,7 @@ class RdwApiResponse
      * @param  int|null  $axle Axles multidimensional
      * @return string|null
      */
-    final public function quickSearch(string $key, ?int $axle = null):?string
+    public function quickSearch(string $key, ?int $axle = null):?string
     {
         $endpoints = $this->request->endpoints;
         $lang = $this->request->language;
@@ -48,30 +47,31 @@ class RdwApiResponse
         foreach ($endpoints as $endpoint) {
             // Search for name
             $found = array_filter($this->response[$endpoint->getName()], function ($value, $index) use ($key, $axle) {
-                if(is_null($axle)) {
+                if (is_null($axle)) {
                     return $index === $key;
-                }
-                elseif($index === $axle) {
+                } elseif ($index === $axle) {
                     // Search in axles sub-array
                     return array_filter($value, function ($value, $index) use ($key) {
                         return $index === $key;
-                    },ARRAY_FILTER_USE_BOTH);
+                    }, ARRAY_FILTER_USE_BOTH);
                 }
-            },ARRAY_FILTER_USE_BOTH);
+            }, ARRAY_FILTER_USE_BOTH);
 
             // Axles found get key => value
-            if(count($found) > 0 && !is_null($axle) && $endpoint->name == 'AXLES') {
+            if (count($found) > 0 && !is_null($axle) && $endpoint->name == 'AXLES') {
                 $found = array_filter($found[$axle], fn ($value, $index) => $index === $key, ARRAY_FILTER_USE_BOTH);
             }
 
             // Check Word found
-            if(count($found) != 1) continue;
+            if (count($found) != 1) {
+                continue;
+            }
 
             // Translation filename
             $name = strtolower($endpoint->name);
 
             $result = $this->response[$endpoint->getName()];
-            if(!is_null($axle) && $endpoint->name == 'AXLES') {
+            if (!is_null($axle) && $endpoint->name == 'AXLES') {
                 $result = $result[$axle];
             }
             return $result[__("rdw-api::".$name.".".$key)] ?? '';
@@ -87,9 +87,11 @@ class RdwApiResponse
      *
      * @return array
      */
-    final public function toArray(): array|string
+    public function toArray(): array|string
     {
-        if(empty($this->response)) return '';
+        if (empty($this->response)) {
+            return '';
+        }
 
         return $this->response;
     }
@@ -102,20 +104,22 @@ class RdwApiResponse
      * @param  array|null  $arr
      * @return object
      */
-    final public function toObject(?array $arr = null): object
+    public function toObject(?array $arr = null): object
     {
-        if(is_null($arr)) {
+        if (is_null($arr)) {
             $arr = $this->response;
         }
 
-        if(empty($arr)) return (object)[];
+        if (empty($arr)) {
+            return (object)[];
+        }
 
-        return (object) array_map(function($dataset) {
-            if(is_array(reset($dataset))) {
+        return (object) array_map(function ($dataset) {
+            if (is_array(reset($dataset))) {
                 return $this->toObject($dataset);
             }
             return (object) $dataset;
-        },$arr);
+        }, $arr);
     }
 
     //------------------------------------------------------------------------------------------------------------------
@@ -123,11 +127,17 @@ class RdwApiResponse
     /**
      * Convert to XML
      *
+     * Alt. formatXml
+     * $arrayToXml = new ArrayToXml($array);
+     * $arrayToXml->prettify()->toXml();
+     *
      * @return string
      */
-    final public function toXml(bool $formatOutput = false): string
+    public function toXml(bool $formatOutput = false): string
     {
-        if(empty($this->response)) return '';
+        if (empty($this->response)) {
+            return '';
+        }
 
         $result = ArrayToXml::convert($this->response);
         if ($formatOutput) {
@@ -138,7 +148,7 @@ class RdwApiResponse
 
     //------------------------------------------------------------------------------------------------------------------
 
-    final protected function formatXml(string $result): string
+    protected function formatXml(string $result): string
     {
         $dom = new \DOMDocument();
         $dom->preserveWhiteSpace = false;
@@ -155,9 +165,11 @@ class RdwApiResponse
      * @param $data
      * @return string
      */
-    final public function toJson(): string
+    public function toJson(): string
     {
-        if(empty($this->response)) return '';
+        if (empty($this->response)) {
+            return '';
+        }
 
         return json_encode($this->response, true);
     }

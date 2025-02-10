@@ -29,8 +29,19 @@ class RdwApiDemo
     final protected function setLanguage():void
     {
         $language = app()->getLocale();
-        if(preg_match("/^" . config('rdw-api.rdw_api_folder') . "\/". config('rdw-api.rdw_api_demo_slug') . "\/(nl|en)$/", request()->path())) {
-            $language = str_replace(config('rdw-api.rdw_api_folder') ."/". config('rdw-api.rdw_api_demo_slug')."/","",request()->path());
+        if (preg_match(
+            "/^" . config('rdw-api.rdw_api_folder') .
+            "\/". config('rdw-api.rdw_api_demo_slug') .
+            "\/(nl|en)$/",
+            request()->path()
+        )
+        ) {
+            $language = str_replace(
+                config('rdw-api.rdw_api_folder') ."/".
+                config('rdw-api.rdw_api_demo_slug')."/",
+                "",
+                request()->path()
+            );
         }
         app()->setLocale($language);
     }
@@ -47,35 +58,47 @@ class RdwApiDemo
         $result = null;
 
         // Types (endpoints) selected
-        if(count($this->getEndpoints()) < 1) return $result;
+        if (count($this->getEndpoints()) < 1) {
+            return $result;
+        }
 
         // Is licenseplate set
-        if(($licenseplate = request()->get('licenseplate'))) {
-
+        if (($licenseplate = request()->get('licenseplate'))) {
             $licenseplate = addslashes(trim(strip_tags($licenseplate)));
 
             // Base check
-            if(!preg_match("/^[0-9A-Z\-]{6,8}$/i",$licenseplate)) {
+            if (!preg_match("/^[0-9A-Z\-]{6,8}$/i", $licenseplate)) {
                 return $result;
             }
 
-            // Call API Wrapper
             $result = RdwApiRequest::make()
+               // ->setAPI('overheidio')
                 ->setLicenseplate($licenseplate)
-                ->setEndpoints($this->getEndpoints())
-                //->setEndpoints(['vehicle','AXLES','8ys7-d773.json'])
-                ->setLanguage($this->getLanguage())
+                //->setEndpoints($this->getEndpoints())
+                ->setEndpoints(['vehicle','axles'])
                 ->setOutputformat($this->getOutputFormat())
-                //->setOutputformat(OutputFormat::JSON)
-                ->rdwApiRequest()
-                ->get();
-                //->output;
+                ->setLanguage('nl')
+                ->fetch(false);
 
-            // Create output by format
+            // Call API Wrapper
+//            $result = RdwApiRequest::make()
+//                ->setLicenseplate($licenseplate)
+//                ->setEndpoints($this->getEndpoints())
+//                //->setEndpoints(['vehicle','AXLES','8ys7-d773.json'])
+//                ->setLanguage($this->getLanguage())
+//                ->setOutputformat($this->getOutputFormat())
+//                //->setOutputformat(OutputFormat::JSON)
+//                ->rdwApiRequest()
+//                ->get();
+//                //->output;
+
+            dd($result);
+
+//            // Create output by format
             $result = match ($this->getOutputFormat()) {
                 OutputFormat::XML->name => $result->toXml(true),
                 OutputFormat::JSON->name => $result->toJson(),
-                Default => $result->toArray(),
+                default => $result->toArray(),
             };
         }
 
@@ -103,7 +126,9 @@ class RdwApiDemo
      */
     final protected function getEndpoints():array
     {
-        if($this->allEndpoints()) return Endpoints::values();
+        if ($this->allEndpoints()) {
+            return Endpoints::values();
+        }
 
         $endpoints  = request()->get('endpoints') ?? [];
 
@@ -144,10 +169,10 @@ class RdwApiDemo
 
     final public function showForm(): View
     {
-        return view('rwdapidemo',[
+        return view('rwdapidemo', [
             'allEndpoints' => (bool) $this->allEndpoints(),
             'endpoints' => (array) $this->getEndpoints(),
-            'licenseplate' => (string) request()->get('licenseplate'),
+            'licenseplate' => (string) '25XTZ5', //request()->get('licenseplate'),
             'language' => (string) $this->getLanguage(),
             'outputformat' => (string) $this->getOutputFormat(),
             'results'=> $this->handleForm(),

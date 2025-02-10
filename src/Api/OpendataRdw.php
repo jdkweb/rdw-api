@@ -23,7 +23,7 @@ class OpendataRdw extends Rdw implements RdwApi
     final public function setClient():void
     {
         $this->client = new Client([
-            'base_uri' => rtrim($this->base_uri,"/")."/",
+            'base_uri' => rtrim($this->base_uri, "/")."/",
             'verify' => false,
             'headers' => [
                 'Content-Type' => 'application/json',
@@ -43,7 +43,6 @@ class OpendataRdw extends Rdw implements RdwApi
     final public function fetch():string|array|null
     {
         foreach ($this->endpoints as $endpoint) {
-
             // Check endpoint exists
             if (!$endpoint instanceof Endpoints) {
                 continue;
@@ -74,16 +73,16 @@ class OpendataRdw extends Rdw implements RdwApi
             $responseBody = (string) $response->getBody();
 
             $result = json_decode($responseBody, true);
-            if(count($result) == 1) {
+
+            if (count($result) == 1) {
                 return json_decode($responseBody, true)[0] ?? [];
             }
-            if(count($result) > 1) {
+            if (count($result) > 1) {
                 return json_decode($responseBody, true) ?? [];
             }
 
             return null;
-
-        } catch(ClientException $e) {
+        } catch (ClientException $e) {
             throw new RdwException(__('rdw-api::errors.endpoint_error', [
                 'class' => self::class,
                 'message' => $e->getMessage(),

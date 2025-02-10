@@ -2,7 +2,6 @@
 
 namespace Jdkweb\Rdw;
 
-
 class Rdw
 {
     /**
@@ -10,11 +9,11 @@ class Rdw
      *
      * @return Api\Rdw
      */
-    final public function finder(): Api\Rdw
+    final public function finder(int|string $use_api = ''): Api\Rdw
     {
-        $class = $this->getApiClass($this->selectApi(config('rdw-api.rdw_api_use')));
+        $class = $this->getApiClass($this->selectApi($use_api));
 
-        if(!class_exists($class)) {
+        if (!class_exists($class)) {
             dd('error, class not exists: ' . $class);
         }
 
@@ -29,12 +28,19 @@ class Rdw
      */
     final protected function selectApi(int|string $use_api = ''):int
     {
-        if(empty($use_api)) $use_api = config('rdw-api.rdw_api_use');
+        if (empty($use_api)) {
+            return config('rdw-api.rdw_api_use');
+        }
 
-        //$key = (!is_numeric($use_api) ? 'rdw_api_use_short' : 'rdw_api_namespace');
-        //dd($use_api, config('rdw-api.' . $key));
-        //return config('rdw-api.' . $key)[$use_api] ?? 0;
-        return $use_api;
+        if (is_string($use_api) && in_array($use_api, config('rdw-api.rdw_api_use_short'))) {
+            return array_flip(config('rdw-api.rdw_api_use_short'))[$use_api];
+        }
+
+        if (is_int($use_api) && isset(config('rdw-api.rdw_api_use_short')[$use_api])) {
+            return $use_api;
+        }
+
+        return 0;
     }
 
     /**

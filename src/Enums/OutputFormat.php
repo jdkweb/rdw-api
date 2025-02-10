@@ -26,13 +26,15 @@ enum OutputFormat: string implements HasLabel
 
     public static function getCase(OutputFormat|string $type): OutputFormat
     {
-        if($type instanceof OutputFormat) {
+        if ($type instanceof OutputFormat) {
             return $type;
         }
 
         $arr = array_filter(self::cases(), fn($enum) => ($type == $enum->name));
 
-        if(empty($arr)) return self::ARRAY;
+        if (empty($arr)) {
+            return self::ARRAY;
+        }
 
         return reset($arr);
     }

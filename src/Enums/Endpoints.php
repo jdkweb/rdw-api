@@ -49,22 +49,13 @@ enum Endpoints: string implements HasLabel
         };
     }
 
-//    static public function getOptions(array $names = [], bool $shortname = false): array
-//    {
-//        $options = [];
-//        foreach (self::cases() as $case) {
-//            if(empty($names) || in_array($case->name, $names)) {
-//                $options[$case->name] = (!$shortname ? $case->getLabel() : $case->getName());
-//            }
-//        }
-//        return $options;
-//    }
-
     public static function getCase(string $type): ?Endpoints
     {
         $arr = array_filter(self::cases(), fn($enum) => (strtoupper($type) === $enum->name || $type === $enum->value));
 
-        if(count($arr)==0) return null;
+        if (count($arr)==0) {
+            return null;
+        }
 
         return reset($arr);
     }

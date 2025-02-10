@@ -3,7 +3,6 @@
 namespace Jdkweb\Rdw;
 
 use Illuminate\Support\ServiceProvider;
-use Livewire\Livewire;
 
 class RdwServiceProvider extends ServiceProvider
 {
@@ -23,12 +22,12 @@ class RdwServiceProvider extends ServiceProvider
         $this->loadTranslationsFrom(dirname(__DIR__).'/lang/', 'rdw-api');
 
         // When not published Load config
-        if(is_null(config('rdw-api.rdw_api_use'))) {
+        if (is_null(config('rdw-api.rdw_api_use'))) {
             $this->mergeConfigFrom(dirname(__DIR__).'/config/rdw-api.php', 'rdw-api');
         }
 
         // Demo route on and local
-        if((config('rdw-api.rdw_api_demo') || env('RDW_API_DEMO')) && env('APP_ENV') === 'local') {
+        if ((config('rdw-api.rdw_api_demo') || env('RDW_API_DEMO')) && env('APP_ENV') === 'local') {
             // Demo routes for normal form
             $this->loadRoutesFrom(dirname(__DIR__).'/routes/demo.php');
         }
