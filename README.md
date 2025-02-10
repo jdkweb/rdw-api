@@ -156,7 +156,7 @@ Jdkweb\Rdw\Controllers\RdwApiResponse {#2800 ▼
 }
 ```
 ### Response methods
-Format for response data
+#### Format for response data
 ```php
 $result->toArray()
 ```
@@ -165,12 +165,14 @@ $result->toJson()
 ```
 
 ```php
-$result->toXml()
+$result->toXml(bool $pretty)
 ```
+Boolean to make xml readable
 
 ```php
 $result->toObject()
 ```
+#### quickSearch method
 Get specific values form response data
 ```php
 $result->quickSearch(string $keyname, ?int $axle = null) // Keynames are Dutch

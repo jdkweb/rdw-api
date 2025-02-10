@@ -164,7 +164,7 @@ abstract class Rdw
                         foreach ($row2 as $key3 => $row3) {
                             $translation
                             [Lang::get('rdw-api::enums.' . $key1, [], $this->language)]
-                            [Lang::get('rdw-api::axles.as_nummer', [], $this->language) . ($key2+1)]
+                            [($key2)]   // [Lang::get('rdw-api::axles.as_nummer', [], $this->language) . ($key2+1)]
                             [Lang::get('rdw-api::' . strtolower($key1) .".". $key3, [], $this->language)] = $row3;
                         }
                     } else {

@@ -107,7 +107,7 @@ class RdwApiRequest
      * @param  string  $licenseplate
      * @return $this
      */
-    public function setAPI(string|int $api): static
+    public function setApi(string|int $api): static
     {
         if(!is_numeric($api)) {
             $r = array_flip(config('rdw-api.rdw_api_use_short'));
