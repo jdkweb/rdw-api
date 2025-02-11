@@ -160,7 +160,7 @@ class RdwApiDemo
             'language' => (string) $this->getLanguage(),
             'outputformat' => (string) $this->getOutputFormat(),
             'results'=> $this->handleForm(),
-            'filamentInstalled' => (bool) !(\Composer\InstalledVersions::isInstalled('Jdkweb/rdw-api-filament'))
+            'filamentInstalled' => (bool) (\Composer\InstalledVersions::isInstalled('jdkweb/rdw-api-filament'))
         ]);
     }
 }
