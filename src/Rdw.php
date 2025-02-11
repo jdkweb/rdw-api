@@ -13,7 +13,7 @@ class Rdw
     {
         $rdw = new self();
 
-        // Get API class
+        // Get API class.
         $class = $rdw->getApiClass($rdw->selectApi($use_api));
 
         if (!class_exists($class)) {
