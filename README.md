@@ -211,6 +211,9 @@ $result->output
 # OR
 $result->toJson()
 ```
+$result is an RdwApiResponse object
+
+Json output:
 ```json
 {
    Vehicle: {
