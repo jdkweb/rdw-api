@@ -14,7 +14,6 @@
             "email": "jasper@jdkweb.nl"
         }
     ],
-    "minimum-stability": "dev",
     "require": {
         "php": ">=8.0",
         "guzzlehttp/guzzle": "^6.5.8|^7.4.5",
