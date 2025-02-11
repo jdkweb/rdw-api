@@ -156,7 +156,7 @@ class RdwApiDemo
         return view('rwdapidemo', [
             'allEndpoints' => (bool) $this->allEndpoints(),
             'endpoints' => (array) $this->getEndpoints(),
-            'licenseplate' => (string) '25XTZ5', //request()->get('licenseplate'),
+            'licenseplate' => (string) request()->get('licenseplate'),
             'language' => (string) $this->getLanguage(),
             'outputformat' => (string) $this->getOutputFormat(),
             'results'=> $this->handleForm(),
