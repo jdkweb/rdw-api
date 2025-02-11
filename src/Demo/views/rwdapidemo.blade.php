@@ -111,6 +111,10 @@
             @elseif($outputformat == 'ARRAY')
                 <x-array :results="$results" />
             @endif
+        @else
+            <div class="block bg-slate-800 rounded p-8 text-yellow-300 font-bold whitespace-pre-wrap  my-6 min-h-[100px]">
+                Geen resultaat / No result
+            </div>
         @endif
     </div>
 </div>

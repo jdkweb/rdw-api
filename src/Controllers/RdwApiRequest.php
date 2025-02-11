@@ -86,16 +86,23 @@ class RdwApiRequest
             'endpoints' => $this->getEndpoints(),
             'language' => $this->language
         );
-        $result->response = $this->result ?? [];
+        // Translated response
+        $result->response = $this->result['translated'] ?? [];
+        // Raw response
+        $result->raw = $this->result['raw'] ?? [];
         $result->status = $this->status($result);
 
-        if (!is_null($this->outputformat) && count($result->response) > 0) {
+        if (!is_null($this->outputformat)) {
             $result->request->outputformat = $this->outputformat;
-            $result->output = match ($this->outputformat) {
-                OutputFormat::XML => $result->toXml(true),
-                OutputFormat::JSON => $result->toJson(),
-                default => $result->toArray(),
-            };
+
+            if (count($result->response) > 0) {
+                // Translated Formated response
+                $result->output = match ($this->outputformat) {
+                    OutputFormat::XML => $result->toXml(true),
+                    OutputFormat::JSON => $result->toJson(),
+                    default => $result->toArray(),
+                };
+            }
         }
 
         return $result;

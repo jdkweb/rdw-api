@@ -51,7 +51,7 @@ $result = (object) RdwApiRequest::make()
     ->setLicenseplate('AB-895-P')
     ->fetch();
 ```
-- Request to the active API (default: opendata.rdw.nl) \
+- Request to the active API (default: opendata.rdw.nl) 
 - All RDW endpoints are selected
 - [RdwApiResponse](#RdwApiResponse) object is returned
 ### All options used
@@ -173,15 +173,27 @@ Boolean to make xml readable
 $result->toObject()
 ```
 #### quickSearch method
-Get specific values form response data
+Get specific values form response data, always use Dutch key for the value.
 ```php
 $result->quickSearch(string $keyname, ?int $axle = null) // Keynames are Dutch
 
 # examples
-    $result->quickSearch('merk')            // TOYOTA
-    $result->quickSearch('voertuigsoort')   // Personenauto
-    $result->quickSearch('spoorbreedte',1)  // 147
+    // Brand:  TOYOTA
+    $result->quickSearch('merk')
+    // Vehicle type: Personenauto            
+    $result->quickSearch('voertuigsoort')
+    // Track width firste axle: 147  
+    $result->quickSearch('1.spoorbreedte')
+    // First fuel description, hybrid have two
+    $set('brandstof_omschrijving', $result->quickSearch('1.brandstof_omschrijving'));
+    // Second axle legally permitted maximum axle load
+    $set('aslast', $result->quickSearch('2.wettelijk_toegestane_maximum_aslast'));
 ```
+- Use dutch key for the value
+- When more results:\
+Axles: axle_location_code for first and second: 
+  - 1.plaatscode_as 
+  - 2.plaatscode_as
 
 ### Example request
 Request:

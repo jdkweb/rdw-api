@@ -79,7 +79,7 @@ abstract class Rdw
      * @param  array  $endpoints
      * @return Rdw
      */
-    final public function setEndpoints(array $endpoints):static
+    public function setEndpoints(array $endpoints):static
     {
         $this->endpoints = $endpoints;
 
@@ -98,7 +98,7 @@ abstract class Rdw
      * @param  string  $language
      * @return Rdw
      */
-    final public function setTranslation(string $language):static
+    public function setTranslation(string $language):static
     {
         $this->language = $language;
         return $this;
@@ -113,7 +113,7 @@ abstract class Rdw
      * @return Rdw
      * @throws RdwException
      */
-    final public function setLicense(string $license):static
+    public function setLicense(string $license):static
     {
         $license = $this->formatLicense($license);
 
@@ -133,52 +133,64 @@ abstract class Rdw
     //------------------------------------------------------------------------------------------------------------------
 
     /**
-     * Translate RDW result array
+     * Translate RDW result array, walk through datasets
      *
      * @param  array  $result
-     * @return array
+     * @return array|null
      */
-    final protected function translateOutput(array $result): ?array
+    protected function translateOutput(array $result): ?array
+    {
+        $translation = [
+            'raw' => $result,
+            'translated' => []
+        ];
+
+        foreach ($result as $dataset => $row) {
+            $key = Lang::get('rdw-api::enums.' . $dataset, [], $this->language);
+            if(count($row) > 0) {
+                $translation['translated'][$key] = $this->translateDataSet($row, strtolower($dataset));
+            }
+        }
+
+        return $translation;
+    }
+
+    //------------------------------------------------------------------------------------------------------------------
+
+    /**
+     * Translate a RDW dataset
+     *
+     * @param  array  $array
+     * @param  string  $dataset
+     * @param  array  $key_map
+     * @return array|null
+     */
+    protected function translateDataSet(array $array, string $dataset, array $key_map = []): ?array
     {
         $translation = [];
 
-        $skip = false;
-        if (app()->getLocale() == $this->language && app()->getLocale() == 'nl') {
-            $skip = true;
-        }
-
-        foreach ($result as $key => $row) {
-            if (count($row) > 0) {
-                $translation[Lang::get('rdw-api::enums.' . $key, [], $this->language)] = ($skip ? $row : []);
+        // Rename key if found in the translation array
+        foreach ($array as $key => $value) {
+            // Sub array
+            if (Lang::has('rdw-api::'.$dataset.".".$key, [], $this->language)) {
+                $newKey = Lang::get('rdw-api::'.$dataset.".".$key, [], $this->language);
             }
-        }
+            elseif(is_numeric($key)) {
+                // cases like axles_1, axles_2 and fuel_1, fuel_2 (hybrid)
+                $newKey = strtolower(Lang::get('rdw-api::enums.' . strtoupper($dataset), [], $this->language)) . "_". $key+1;
+            }
 
-        if ($skip) {
-            return $translation;
-        }
+            if(!isset($newKey)) continue;
 
-        foreach ($result as $key1 => $row1) {
-            if (is_array($row1)) {
-                foreach ($row1 as $key2 => $row2) {
-                    if (is_array($row2)) {
-                        foreach ($row2 as $key3 => $row3) {
-                            $translation
-                            [Lang::get('rdw-api::enums.' . $key1, [], $this->language)]
-                            [($key2)]   // [Lang::get('rdw-api::axles.as_nummer', [], $this->language) . ($key2+1)]
-                            [Lang::get('rdw-api::' . strtolower($key1) .".". $key3, [], $this->language)] = $row3;
-                        }
-                    } else {
-                        $translation
-                        [Lang::get('rdw-api::enums.' . strtoupper($key1), [], $this->language)]
-                        [Lang::get('rdw-api::' .  strtolower($key1) .".". $key2, [], $this->language)] = $row2;
-                    }
-                }
+            // If value is an array, recurse
+            if (is_array($value)) {
+                $translation[$newKey] = $this->translateDataSet($value, $dataset);
             } else {
-                $translation[Lang::get('rdw-api::enums.' . $key1, [], $this->language)] = [];
+                $translation[$newKey] = $value;
             }
         }
 
-        return (count($translation) == 0 ? null : $translation);
+        return $translation;
     }
 
     //------------------------------------------------------------------------------------------------------------------
@@ -189,7 +201,7 @@ abstract class Rdw
      * @param  string  $license
      * @return string
      */
-    final protected function formatLicense(string $license): string
+    protected function formatLicense(string $license): string
     {
         $license = preg_replace("/[^a-zA-Z0-9]+/", "", str_replace('-', '', $license));
 
@@ -204,7 +216,7 @@ abstract class Rdw
      * @param  array  $endpoints array with strings or array with endpoints
      * @return bool
      */
-    final protected function selectEndpoints(array $endpoints):bool
+    protected function selectEndpoints(array $endpoints):bool
     {
         $this->endpoints =array_filter(array_map(function ($endpoint) {
             if (!$endpoint instanceof Endpoints && is_string($endpoint)) {
@@ -225,7 +237,7 @@ abstract class Rdw
      * @param  array  $endpoints array with strings or array with endpoints
      * @return bool
      */
-    final protected function setAllEndpoints(array $endpoints): bool
+    protected function setAllEndpoints(array $endpoints): bool
     {
         if (count($endpoints) == 1 && is_string($endpoints[0]) && strtoupper($endpoints[0]) == 'ALL') {
             $this->endpoints = Endpoints::cases();

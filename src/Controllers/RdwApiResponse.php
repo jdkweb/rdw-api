@@ -9,6 +9,13 @@ use Spatie\ArrayToXml\ArrayToXml;
 class RdwApiResponse
 {
     /**
+     * Raw not translated RDW data
+     *
+     * @var array
+     */
+    public array $raw;
+
+    /**
      * Results from Rdw Api request
      * @var array
      */
@@ -32,83 +39,64 @@ class RdwApiResponse
      */
     public bool $status;
 
+    //------------------------------------------------------------------------------------------------------------------
 
     /**
      * Keys, always dutch key also when output is other language
-     *
-     * @TODO rewrite
+     * walk through datasets
      *
      * @param  string  $key
-     * @param  int|null  $axle Axles multidimensional
+     * @param  int|null  $subarray Fuel/Axles multidimensional
      * @return string|null
      */
-    public function quickSearch(string $org_key, ?int $axle = null):?string
+    public function quickSearch(string $request_dutch_key):?string
     {
-        $local_lang = app()->getLocale();           // Website lang [en,nl]
-        $endpoints = $this->request->endpoints;
-        $lang = $this->request->language;           // Rdw wrapper language [en,nl]
+        // specific search on first or second axle
+        // (exp. first axle) 1.wettelijk_toegestane_maximum_aslast
+        $rowkey = null;
 
-        // walkthrough endpoints
-        foreach ($endpoints as $endpoint) {
-            $found = [];
+        if (preg_match("/^[0-9]{1}\.(.*)$/", $request_dutch_key)) {
+            $rowkey = substr($request_dutch_key, 0, 1);
+            $request_dutch_key = substr($request_dutch_key, 2);
+        }
 
-            if($lang != 'nl' || $lang != $local_lang) {
-                $key = Lang::get("rdw-api::".strtolower($endpoint->name).".".$org_key,[],$lang);
-            }
-            else {
-                $key = $org_key;
-            }
-
-
-            if($lang != $local_lang) {
-                $endpoint_key = Lang::get("rdw-api::enums.".$endpoint->name,[],$lang);
-            }
-            else {
-                $endpoint_key = $endpoint->getName();
-            }
-
-            // Search for name
-            if(!empty($this->response[$endpoint_key])) {
-                $found = array_filter($this->response[$endpoint_key], function ($value, $index) use ($key, $axle) {
-                    if (is_null($axle)) {
-                        return $index === $key;
-                    } elseif ($index === $axle) {
-                        // Search in axles sub-array
-                        return array_filter($value, function ($value, $index) use ($key) {
-                            return $index === $key;
-                        }, ARRAY_FILTER_USE_BOTH);
-                    }
-                }, ARRAY_FILTER_USE_BOTH);
-
-            }
-            // Axles found get key => value
-            if (count($found) > 0 && !is_null($axle) && $endpoint->name == 'AXLES') {
-                $found = array_filter($found[$axle], fn ($value, $index) => $index === $key, ARRAY_FILTER_USE_BOTH);
-            }
-
-            // Check Word found
-            if (count($found) != 1) {
-                continue;
-            }
-
-            // Translation filename
-            $name = strtolower($endpoint->name);
-
-            $result = $this->response[$endpoint_key];
-            if (!is_null($axle) && $endpoint->name == 'AXLES') {
-                $result = $result[$axle];
-            }
-
-            if($lang != 'nl' || $lang != $local_lang) {
-                return $result[$key] ?? '';
-
-            }
-            else {
-                return $result[__("rdw-api::".$name.".".$key)] ?? '';
+        foreach ($this->raw as $endpoint_name => $data) {
+            if($word = $this->search_key_in_array($request_dutch_key, $data, $rowkey)) {
+                return $word;
             }
         }
 
         return null;
+    }
+
+    //------------------------------------------------------------------------------------------------------------------
+
+    /**
+     * Search for value by key in the dataset
+     *
+     * @param  string  $searchKey
+     * @param  array|null  $search_array
+     * @param  int|null  $rowkey
+     * @return string|null
+     */
+    protected function search_key_in_array(string $searchKey, ?array $search_array = null, ?int $rowkey = null): ?string
+    {
+        foreach ($search_array as $key => $value) {
+            if ($key === $searchKey) {
+                return $value;
+            }
+
+            if (!is_null($rowkey) && is_array($value) && $key !== ($rowkey-1)) {
+                continue;
+            }
+
+            if (is_array($value)) {
+                if ($this->search_key_in_array($searchKey, $value)) {
+                    return $value[$searchKey];
+                }
+            }
+        }
+        return null; // Key not found
     }
 
     //------------------------------------------------------------------------------------------------------------------
