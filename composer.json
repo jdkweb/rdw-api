@@ -1,0 +1,30 @@
+{
+    "name": "jdkweb/rdw-api",
+    "description": "Wrapper for RDW API for getting vehicle information from opendata.rdw.nl",
+    "type": "library",
+    "license": "MIT",
+    "autoload": {
+        "psr-4": {
+            "Jdkweb\\RdwApi\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "Jasper",
+            "email": "jasper@jdkweb.nl"
+        }
+    ],
+    "minimum-stability": "dev",
+    "require": {
+        "php": ">=8.0",
+        "guzzlehttp/guzzle": "^6.5.8|^7.4.5",
+        "spatie/array-to-xml": "^3.x-dev"
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "Jdkweb\\RdwApi\\RdwServiceProvider"
+            ]
+        }
+    }
+}
