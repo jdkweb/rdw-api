@@ -46,7 +46,6 @@ class RdwApiRequest
             // Default settings
             self::$instance->endpoints = Endpoints::cases();
             self::$instance->language = app()->getLocale();
-            //self::$instance->outputformat = OutputFormat::ARRAY;
         }
 
         return self::$instance;
@@ -61,7 +60,7 @@ class RdwApiRequest
      */
     public function fetch(?bool $raw = null): RdwApiResponse|static
     {
-        $this->result = \Jdkweb\RdwApi\Facades\Rdw::finder($this->getApi())
+        $this->result = \Jdkweb\RdwApi\Rdw::make($this->getApi())
             ->setLicense($this->licenseplate)
             ->setEndpoints($this->endpoints)
             ->setTranslation($this->language)

@@ -9,9 +9,11 @@ class Rdw
      *
      * @return Api\Rdw
      */
-    final public function finder(int|string $use_api = ''): Api\Rdw
+    public static function make(int|string $use_api = '')
     {
-        $class = $this->getApiClass($this->selectApi($use_api));
+        $rdw = new self();
+
+        $class = $rdw->getApiClass($rdw->selectApi($use_api));
 
         if (!class_exists($class)) {
             dd('error, class not exists: ' . $class);
