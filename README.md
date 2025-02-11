@@ -278,5 +278,6 @@ To use this wrapper in [Filament](https://filamentphp.com/) install the filament
 ```bash
 composer require jdkweb/rdw-api-filament
 ```
-See: [jdkweb/rdw-api-filament](https://github.com/jdkweb/rdw-api-filament)
+Github: [jdkweb/rdw-api-filament](https://github.com/jdkweb/rdw-api-filament) \
+packagist: [jdkweb/rdw-api-filament](https://packagist.org/packages/jdkweb/rdw-api-filament)
 
