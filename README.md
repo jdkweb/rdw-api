@@ -26,14 +26,14 @@ composer require jdkweb/rdw-api
 ```
 If needed you can publish the config
 ```bash
-php artisan vendor:publish --provider="Jdkweb\Rdw\RdwServiceProvider" --tag="config"
+php artisan vendor:publish --provider="Jdkweb\RdwApi\RdwServiceProvider" --tag="config"
 ```
 For changing options see: [change API](#api) and [Demo](#demo)
 ## Translation
 If changes are needed you can publish the translation files
 ```bash
 # published in: trans/vendor/jdkweb/rdw-api
-php artisan vendor:publish --provider="Jdkweb\Rdw\RdwServiceProvider" --tag="lang"
+php artisan vendor:publish --provider="Jdkweb\RdwApi\RdwServiceProvider" --tag="lang"
 ``` 
 Translations available:
 - [Dutch (nl)](https://github.com/jdkweb/rdw-api/tree/main/lang/nl)
@@ -45,7 +45,7 @@ Translations available:
 ## Request
 ### Basic usage
 ```php
-use Jdkweb\Rdw\Controllers\RdwApiRequest
+use Jdkweb\RdwApi\Controllers\RdwApiRequest
 ...
 $result = (object) RdwApiRequest::make()
     ->setLicenseplate('AB-895-P')
@@ -56,9 +56,9 @@ $result = (object) RdwApiRequest::make()
 - [RdwApiResponse](#RdwApiResponse) object is returned
 ### All options used
 ```php
-use Jdkweb\Rdw\Controllers\RdwApiRequest
-use Jdkweb\Rdw\Enums\OutputFormat;
-use Jdkweb\Rdw\Enums\Endpoints;
+use Jdkweb\RdwApi\Controllers\RdwApiRequest
+use Jdkweb\RdwApi\Enums\OutputFormat;
+use Jdkweb\RdwApi\Enums\Endpoints;
 ...
 $result = RdwApiRequest::make()
     ->setAPI(0)
@@ -85,7 +85,7 @@ With or without hyphen-minus
 
 #### Select endpoints for request 
 ```php
-use \Jdkweb\Rdw\Enums\Endpoints;
+use \Jdkweb\RdwApi\Enums\Endpoints;
 ...
 ->setEndpoints(array)
 
@@ -116,7 +116,7 @@ Available endpoints (not case sensitive):
 
 #### Format of the response output
 ```php
-use \Jdkweb\Rdw\Enums\OutputFormat
+use \Jdkweb\RdwApi\Enums\OutputFormat
 ...
 ->setOuputformat(string|OutputFormat)
 
@@ -148,7 +148,7 @@ When boolean isset and true RdwApiRequest object will be returned
 
 ## Response
 ```php
-Jdkweb\Rdw\Controllers\RdwApiResponse {#2800 ▼
+Jdkweb\RdwApi\Controllers\RdwApiResponse {#2800 ▼
   +response: array:2 [▶]    // API response
   +request: {#3036 ▶}       // Request vars
   +output: array:2 [▶]      // Formated output when setOutputFormat is used

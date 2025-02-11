@@ -1,9 +1,9 @@
 <?php
 
-namespace Jdkweb\Rdw\Controllers;
+namespace Jdkweb\RdwApi\Controllers;
 
 use Illuminate\Support\Facades\Lang;
-use Jdkweb\Rdw\Enums\Endpoints;
+use Jdkweb\RdwApi\Enums\Endpoints;
 use Spatie\ArrayToXml\ArrayToXml;
 
 class RdwApiResponse

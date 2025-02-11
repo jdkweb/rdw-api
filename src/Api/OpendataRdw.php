@@ -1,13 +1,13 @@
 <?php
 
-namespace Jdkweb\Rdw\Api;
+namespace Jdkweb\RdwApi\Api;
 
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\ClientException;
 use GuzzleHttp\Exception\GuzzleException;
-use Jdkweb\Rdw\Exceptions\RdwException;
-use Jdkweb\Rdw\Enums\Endpoints;
-use Jdkweb\Rdw\Forms\Components\RdwApiResponse;
+use Jdkweb\RdwApi\Exceptions\RdwException;
+use Jdkweb\RdwApi\Enums\Endpoints;
+use Jdkweb\RdwApi\Forms\Components\RdwApiResponse;
 
 class OpendataRdw extends Rdw implements RdwApi
 {

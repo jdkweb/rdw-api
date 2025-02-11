@@ -1,13 +1,13 @@
 <?php
 
-namespace Jdkweb\Rdw\Controllers;
+namespace Jdkweb\RdwApi\Controllers;
 
 use Filament\Facades\Filament;
 use Filament\Forms\Form;
-use Jdkweb\Rdw\Enums\Endpoints;
-use Jdkweb\Rdw\Enums\OutputFormat;
-use Jdkweb\Rdw\Exceptions\RdwException;
-use Jdkweb\Rdw\Filament\Forms\Components\RdwApiLicenseplate;
+use Jdkweb\RdwApi\Enums\Endpoints;
+use Jdkweb\RdwApi\Enums\OutputFormat;
+use Jdkweb\RdwApi\Exceptions\RdwException;
+use Jdkweb\RdwApi\Filament\Forms\Components\RdwApiLicenseplate;
 
 class RdwApiRequest
 {
@@ -61,7 +61,7 @@ class RdwApiRequest
      */
     public function fetch(?bool $raw = null): RdwApiResponse|static
     {
-        $this->result = \Jdkweb\Rdw\Facades\Rdw::finder($this->getApi())
+        $this->result = \Jdkweb\RdwApi\Facades\Rdw::finder($this->getApi())
             ->setLicense($this->licenseplate)
             ->setEndpoints($this->endpoints)
             ->setTranslation($this->language)

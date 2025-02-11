@@ -1,6 +1,6 @@
 <?php
 
-namespace Jdkweb\Rdw;
+namespace Jdkweb\RdwApi;
 
 class Rdw
 {

@@ -1,6 +1,6 @@
 <?php
 
-namespace Jdkweb\Rdw;
+namespace Jdkweb\RdwApi;
 
 use Illuminate\Support\ServiceProvider;
 
@@ -8,12 +8,12 @@ class RdwServiceProvider extends ServiceProvider
 {
     final public function boot():void
     {
-        // php artisan vendor:publish --provider="Jdkweb\Rdw\RdwServiceProvider" --tag="config"
+        // php artisan vendor:publish --provider="Jdkweb\RdwApi\RdwServiceProvider" --tag="config"
         $this->publishes([
             dirname(__DIR__).'/config/rdw-api.php' => config_path('rdw-api.php'),
         ], 'config');
 
-        // php artisan vendor:publish --provider="Jdkweb\Rdw\RdwServiceProvider" --tag="lang"
+        // php artisan vendor:publish --provider="Jdkweb\RdwApi\RdwServiceProvider" --tag="lang"
         $this->publishes([
             dirname(__DIR__).'/lang' =>  lang_path('vendor/rdw-api'),
         ], 'lang');
@@ -44,7 +44,7 @@ class RdwServiceProvider extends ServiceProvider
             return new Rdw();
         });
 
-        // rdw as alias for "Jdkweb\Rdw\Rdw"
+        // rdw as alias for "Jdkweb\RdwApi\Rdw"
         $this->app->alias(Rdw::class, 'rdw');
     }
 }

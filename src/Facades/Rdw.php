@@ -1,6 +1,6 @@
 <?php
 
-namespace Jdkweb\Rdw\Facades;
+namespace Jdkweb\RdwApi\Facades;
 
 use Illuminate\Support\Facades\Facade;
 
@@ -14,6 +14,6 @@ class Rdw extends Facade
      */
     protected static function getFacadeAccessor(): string
     {
-        return 'rdw'; // \Jdkweb\Rdw\Rdw::class;
+        return 'rdw'; // \Jdkweb\RdwApi\Rdw::class;
     }
 }

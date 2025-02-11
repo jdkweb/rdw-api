@@ -1,6 +1,6 @@
 <?php
 
-namespace Jdkweb\Rdw\Enums;
+namespace Jdkweb\RdwApi\Enums;
 
 use Filament\Support\Contracts\HasLabel;
 

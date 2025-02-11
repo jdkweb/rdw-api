@@ -9,5 +9,5 @@ Route::group(['prefix' => '/'  . config('rdw-api.rdw_api_folder')], function () 
 
     Route::match(array('GET', 'POST'),
         '/'.config('rdw-api.rdw_api_demo_slug').'/{language?}',
-        [\Jdkweb\Rdw\Demo\RdwApiDemo::class, 'showForm']);
+        [\Jdkweb\RdwApi\Demo\RdwApiDemo::class, 'showForm']);
 });

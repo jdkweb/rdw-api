@@ -1,12 +1,12 @@
 <?php
 
-namespace Jdkweb\Rdw\Api;
+namespace Jdkweb\RdwApi\Api;
 
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\ClientException;
 use Illuminate\Support\Facades\Lang;
-use Jdkweb\Rdw\Enums\Endpoints;
-use Jdkweb\Rdw\Exceptions\RdwException;
+use Jdkweb\RdwApi\Enums\Endpoints;
+use Jdkweb\RdwApi\Exceptions\RdwException;
 
 class OverheidIO extends Rdw implements RdwApi
 {

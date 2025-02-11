@@ -1,6 +1,6 @@
 <?php
 
-namespace Jdkweb\Rdw\Exceptions;
+namespace Jdkweb\RdwApi\Exceptions;
 
 use Exception;
 

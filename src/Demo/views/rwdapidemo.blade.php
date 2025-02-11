@@ -55,7 +55,7 @@
                                     class="border rounded h-40 py-3 px-3 w-full"
                                     required
                                     multiple>
-                                @foreach(Jdkweb\Rdw\Enums\Endpoints::cases() as $type)
+                                @foreach(Jdkweb\RdwApi\Enums\Endpoints::cases() as $type)
                                     <option
                                         value="{{ $type->value }}" {{ (in_array($type->value, $endpoints) ? 'selected':'') }}>
                                         {{ $type->getLabel() }}
@@ -76,7 +76,7 @@
                             <select name="outputformat"
                                     class="border rounded w-full h-12 px-4"
                                     required>
-                                @foreach(Jdkweb\Rdw\Enums\OutputFormat::cases() as $format)
+                                @foreach(Jdkweb\RdwApi\Enums\OutputFormat::cases() as $format)
                                     <option value="{{ $format->name }}" {{ ($outputformat == $format->name ? 'selected' : '' ) }} >
                                         {{ $format->getLabel()  }}
                                     </option>
@@ -111,7 +111,7 @@
             @elseif($outputformat == 'ARRAY')
                 <x-array :results="$results" />
             @endif
-        @else
+        @elseif($licenseplate != '')
             <div class="block bg-slate-800 rounded p-8 text-yellow-300 font-bold whitespace-pre-wrap  my-6 min-h-[100px]">
                 Geen resultaat / No result
             </div>

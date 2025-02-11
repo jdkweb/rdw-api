@@ -1,12 +1,12 @@
 <?php
 
-namespace Jdkweb\Rdw\Demo;
+namespace Jdkweb\RdwApi\Demo;
 
 use Illuminate\Support\Facades\View as SetView;
 use Illuminate\View\View;
-use Jdkweb\Rdw\Enums\OutputFormat;
-use Jdkweb\Rdw\Enums\Endpoints;
-use Jdkweb\Rdw\Controllers\RdwApiRequest;
+use Jdkweb\RdwApi\Enums\OutputFormat;
+use Jdkweb\RdwApi\Enums\Endpoints;
+use Jdkweb\RdwApi\Controllers\RdwApiRequest;
 
 class RdwApiDemo
 {
