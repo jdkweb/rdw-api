@@ -45,7 +45,7 @@ Translations available:
 ## Request
 ### Basic usage
 ```php
-use Jdkweb\RdwApi\Controllers\RdwApiRequest
+use Jdkweb\RdwApi\Controllers\RdwApiRequest;
 ...
 $result = (object) RdwApiRequest::make()
     ->setLicenseplate('AB-895-P')
@@ -56,7 +56,7 @@ $result = (object) RdwApiRequest::make()
 - [RdwApiResponse](#RdwApiResponse) object is returned
 ### All options used
 ```php
-use Jdkweb\RdwApi\Controllers\RdwApiRequest
+use Jdkweb\RdwApi\Controllers\RdwApiRequest;
 use Jdkweb\RdwApi\Enums\OutputFormat;
 use Jdkweb\RdwApi\Enums\Endpoints;
 ...
@@ -116,7 +116,7 @@ Available endpoints (not case sensitive):
 
 #### Format of the response output
 ```php
-use \Jdkweb\RdwApi\Enums\OutputFormat
+use \Jdkweb\RdwApi\Enums\OutputFormat;
 ...
 ->setOuputformat(string|OutputFormat)
 
