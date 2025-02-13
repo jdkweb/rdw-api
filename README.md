@@ -18,7 +18,7 @@ This wrapper can be extended to be used in Filament: [rdw-api-filament](https://
 
 
 ## Installation
-Requires PHP 8.2 and Laravel 10 or higher 
+Requires PHP 8.1 and Laravel 10 or higher 
 
 Install the package via composer:
 ```bash
