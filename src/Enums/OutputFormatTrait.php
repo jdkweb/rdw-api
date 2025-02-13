@@ -24,7 +24,7 @@ trait OutputFormatTrait
             return $type;
         }
 
-        $arr = array_filter(self::cases(), fn($enum) => ($type == $enum->name));
+        $arr = array_filter(self::cases(), fn($enum) => (strtoupper($type) == $enum->name || $type == $enum->value));
 
         if (empty($arr)) {
             return self::ARRAY;

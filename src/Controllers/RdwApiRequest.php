@@ -38,8 +38,6 @@ class RdwApiRequest extends RdwApiExt
      */
     private static RdwApiRequest|null $instance = null;
 
-    private $filament = null;
-
     //------------------------------------------------------------------------------------------------------------------
 
     public static function make(): static
@@ -50,22 +48,10 @@ class RdwApiRequest extends RdwApiExt
             // Default settings
             self::$instance->endpoints = Endpoints::cases();
             self::$instance->language = app()->getLocale();
-
-//            if ( (\Composer\InstalledVersions::isInstalled('jdkweb/rdw-api-filament')) ) {
-//                self::$instance->filament = new \Jdkweb\RdwApi\Filament\Controllers\RdwApiRequest();
-//            }
         }
 
         return self::$instance;
     }
-
-//    public function __call(string $name, array $arguments)
-//    {
-//        // Special filament public method
-//        if($name == "setFormData") {
-//            return $this->filament->setFormData(...$arguments);
-//        }
-//    }
 
     //------------------------------------------------------------------------------------------------------------------
 
