@@ -52,16 +52,4 @@ return [
     'rdw_api_folder' => 'rdw-api',
     'rdw_api_filament_folder' => 'filament',
     'rdw_api_demo_slug' => 'demo',
-
-    /*
-    |--------------------------------------------------------------------------
-    | Filament config settings
-    |--------------------------------------------------------------------------
-    |
-    | Model field names
-    |
-    */
-
-    'license_plate' => 'licensePlate',
-    'select_endpoints' => 'dataSet'
 ];
