@@ -5,7 +5,17 @@ namespace Jdkweb\RdwApi\Controllers;
 use Jdkweb\RdwApi\Enums\Endpoints;
 use Jdkweb\RdwApi\Enums\OutputFormat;
 
-class RdwApiRequest
+/**
+ * Check if filament extension is used, load extension for it
+ */
+if (! (\Composer\InstalledVersions::isInstalled('filament/filament')) ) {
+    class RdwApiExt extends RdwApiExtEmpty {}
+}
+elseif((\Composer\InstalledVersions::isInstalled('jdkweb/rdw-api-filament'))) {
+    class RdwApiExt extends \Jdkweb\RdwApi\Filament\Controllers\RdwApiRequest {}
+}
+
+class RdwApiRequest extends RdwApiExt
 {
     /**
      * Values for API request
@@ -28,6 +38,8 @@ class RdwApiRequest
      */
     private static RdwApiRequest|null $instance = null;
 
+    private $filament = null;
+
     //------------------------------------------------------------------------------------------------------------------
 
     public static function make(): static
@@ -38,10 +50,22 @@ class RdwApiRequest
             // Default settings
             self::$instance->endpoints = Endpoints::cases();
             self::$instance->language = app()->getLocale();
+
+//            if ( (\Composer\InstalledVersions::isInstalled('jdkweb/rdw-api-filament')) ) {
+//                self::$instance->filament = new \Jdkweb\RdwApi\Filament\Controllers\RdwApiRequest();
+//            }
         }
 
         return self::$instance;
     }
+
+//    public function __call(string $name, array $arguments)
+//    {
+//        // Special filament public method
+//        if($name == "setFormData") {
+//            return $this->filament->setFormData(...$arguments);
+//        }
+//    }
 
     //------------------------------------------------------------------------------------------------------------------
 
