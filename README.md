@@ -89,7 +89,8 @@ use \Jdkweb\RdwApi\Enums\Endpoints;
 ...
 ->setEndpoints(array)
 
-# examples
+# examples:
+
     // Call to all endpoints
     ->setEndpoints(Endpoints::cases())
     
@@ -147,6 +148,7 @@ Available:
 When boolean isset and true RdwApiRequest object will be returned 
 
 ## Response
+Response data form the RDW API request in $result:
 ```php
 Jdkweb\RdwApi\Controllers\RdwApiResponse {#2800 ▼
   +response: array:2 [▶]    // API response
@@ -177,15 +179,20 @@ Get specific values form response data, always use Dutch key for the value.
 ```php
 $result->quickSearch(string $keyname, ?int $axle = null) // Keynames are Dutch
 
-# examples
+# examples:
+
     // Brand:  TOYOTA
     $result->quickSearch('merk')
+    
     // Vehicle type: Personenauto            
     $result->quickSearch('voertuigsoort')
+    
     // Track width firste axle: 147  
     $result->quickSearch('1.spoorbreedte')
+    
     // First fuel description, hybrid have two
     $set('brandstof_omschrijving', $result->quickSearch('1.brandstof_omschrijving'));
+    
     // Second axle legally permitted maximum axle load
     $set('aslast', $result->quickSearch('2.wettelijk_toegestane_maximum_aslast'));
 ```
@@ -205,6 +212,8 @@ $result = RdwApiRequest::make()
     ->setLanguage('en')
     ->fetch(true);
 ```
+the method setOutputformat creates a prepared output else output is empty
+
 Response:
 ```php
 $result->output
