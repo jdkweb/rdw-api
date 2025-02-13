@@ -2,8 +2,6 @@
 
 namespace Jdkweb\RdwApi\Controllers;
 
-use Illuminate\Support\Facades\Lang;
-use Jdkweb\RdwApi\Enums\Endpoints;
 use Spatie\ArrayToXml\ArrayToXml;
 
 class RdwApiResponse

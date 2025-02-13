@@ -2,21 +2,11 @@
 
 namespace Jdkweb\RdwApi\Controllers;
 
-use Filament\Facades\Filament;
-use Filament\Forms\Form;
 use Jdkweb\RdwApi\Enums\Endpoints;
 use Jdkweb\RdwApi\Enums\OutputFormat;
-use Jdkweb\RdwApi\Exceptions\RdwException;
-use Jdkweb\RdwApi\Filament\Forms\Components\RdwApiLicenseplate;
 
 class RdwApiRequest
 {
-    /**
-     * Callable setters and getters
-     * @var array|string[]
-     */
-    //private array $properties = ['licenseplate', 'language', 'outputformat', 'endpoints', 'result'];
-
     /**
      * Values for API request
      * @var string|null
@@ -37,6 +27,8 @@ class RdwApiRequest
      * @var RdwApiRequest|null
      */
     private static RdwApiRequest|null $instance = null;
+
+    //------------------------------------------------------------------------------------------------------------------
 
     public static function make(): static
     {
@@ -128,6 +120,8 @@ class RdwApiRequest
         $this->api = $api;
         return $this;
     }
+
+    //------------------------------------------------------------------------------------------------------------------
 
     /**
      * @param  string  $licenseplate
