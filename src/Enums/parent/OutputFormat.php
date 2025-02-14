@@ -1,6 +1,6 @@
 <?php
 
-namespace Jdkweb\RdwApi\Enums\Parts;
+namespace Jdkweb\RdwApi\Enums;
 
 enum OutputFormat: string
 {

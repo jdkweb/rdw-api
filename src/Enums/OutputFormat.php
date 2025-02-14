@@ -1,6 +1,6 @@
 <?php
 
-namespace Jdkweb\RdwApi\Enums;
+# namespace Jdkweb\RdwApi\Enums;
 
 /**
  * Hack for loading an enum using the getLabel method that works in both laravel and Filament
@@ -10,7 +10,7 @@ namespace Jdkweb\RdwApi\Enums;
  * extends is not allowed in enums
  */
 if (! (\Composer\InstalledVersions::isInstalled('filament/filament')) ) {
-    require_once 'OutputFormatLaravel.php';
+    require_once 'parent/OutputFormatLaravel.php';
 }
 elseif((\Composer\InstalledVersions::isInstalled('jdkweb/rdw-api-filament'))) {
     $path = app()->basePath('/vendor/jdkweb/rdw-api-filament/src/Enums') . '/OutputFormatFilament.php';
