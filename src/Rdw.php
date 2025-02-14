@@ -4,17 +4,10 @@ namespace Jdkweb\RdwApi;
 
 class Rdw
 {
-    /**
-     * Call API to get RDW info
-     *
-     * @return Api\Rdw
-     */
-    public static function make(int|string $use_api = '')
+    public function getApi(int|string $use_api = '')
     {
-        $rdw = new self();
-
         // Get API class.
-        $class = $rdw->getApiClass($rdw->selectApi($use_api));
+        $class = $this->getApiClass($this->selectApi($use_api));
 
         if (!class_exists($class)) {
             dd('error, class not exists: ' . $class);

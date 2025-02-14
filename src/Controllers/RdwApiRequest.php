@@ -62,7 +62,8 @@ class RdwApiRequest extends RdwApiExt
      */
     public function fetch(?bool $raw = null): RdwApiResponse|static
     {
-        $this->result = \Jdkweb\RdwApi\Rdw::make($this->getApi())
+        $this->result = app('RdwApi')
+            ->getApi($this->getApi())
             ->setLicense($this->licenseplate)
             ->setEndpoints($this->endpoints)
             ->setTranslation($this->language)

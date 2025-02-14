@@ -3,9 +3,30 @@
 namespace Jdkweb\RdwApi;
 
 use Illuminate\Support\ServiceProvider;
+use Jdkweb\RdwApi\Enums\OutputFormat;
 
 class RdwServiceProvider extends ServiceProvider
 {
+    /**
+     * Register the service provider.
+     * Binding Rdw class into Laravel service container.
+     *
+     * @return void
+     */
+    final public function register():void
+    {
+        $this->app->singleton(Rdw::class, function ($app) {
+            return new Rdw();
+        });
+
+        // rdw as alias: app('RdwApi')
+        $this->app->alias(Rdw::class, 'RdwApi');
+    }
+
+    /**
+     *
+     * @return void
+     */
     final public function boot():void
     {
         // php artisan vendor:publish --provider="Jdkweb\RdwApi\RdwServiceProvider" --tag="config"
@@ -31,20 +52,5 @@ class RdwServiceProvider extends ServiceProvider
             // Demo routes for normal form
             $this->loadRoutesFrom(dirname(__DIR__).'/routes/demo.php');
         }
-    }
-
-    /**
-     * Register the service provider.
-     *
-     * @return void
-     */
-    final public function register():void
-    {
-        $this->app->singleton(Rdw::class, function ($app) {
-            return new Rdw();
-        });
-
-        // rdw as alias for "Jdkweb\RdwApi\Rdw"
-        $this->app->alias(Rdw::class, 'rdw');
     }
 }

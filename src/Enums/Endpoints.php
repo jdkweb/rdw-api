@@ -10,7 +10,8 @@ namespace Jdkweb\RdwApi\Enums;
  * extends is not allowed in enums
  */
 if (! (\Composer\InstalledVersions::isInstalled('filament/filament')) ) {
-    require_once 'EndpointsLaravel.php';
+    //require_once 'EndpointsLaravel.php';
+    require_once 'Parts/Endpoints.php';
 }
 elseif((\Composer\InstalledVersions::isInstalled('jdkweb/rdw-api-filament'))) {
     $path = app()->basePath('/vendor/jdkweb/rdw-api-filament/src/Enums') . '/EndpointsFilament.php';
