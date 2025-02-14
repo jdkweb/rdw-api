@@ -1,7 +1,5 @@
 <?php
 
-namespace Jdkweb\RdwApi\Enums;
-
 enum Endpoints: string
 {
     use EndpointsTrait;
