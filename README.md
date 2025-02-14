@@ -122,7 +122,11 @@ use \Jdkweb\RdwApi\Enums\OutputFormat;
 ->setOuputformat(string|OutputFormat)
 
 # examples
+    
+    // Enum
     ->setOuputformat(OutputFormat::JSON)
+    
+    // name, case insensitive
     ->setOuputformat('json')
 ```
 - OutputFormat::ARRAY | array **[default]**
@@ -177,7 +181,7 @@ $result->toObject()
 #### quickSearch method
 Get specific values form response data, always use Dutch key for the value.
 ```php
-$result->quickSearch(string $keyname, ?int $axle = null) // Keynames are Dutch
+$result->quickSearch(string $keyname) // Keynames are Dutch
 
 # examples:
 
