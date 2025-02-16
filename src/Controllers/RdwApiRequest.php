@@ -4,6 +4,7 @@ namespace Jdkweb\RdwApi\Controllers;
 
 use Jdkweb\RdwApi\Enums\Endpoints;
 use Jdkweb\RdwApi\Enums\OutputFormat;
+use Jdkweb\RdwApi\Facades\Rdw;
 
 /**
  * Check if filament extension is used, load extension for it
@@ -62,8 +63,7 @@ class RdwApiRequest extends RdwApiExt
      */
     public function fetch(?bool $raw = null): RdwApiResponse|static
     {
-        $this->result = app('RdwApi')
-            ->getApi($this->getApi())
+        $this->result = Rdw::getApi($this->getApi())
             ->setLicense($this->licenseplate)
             ->setEndpoints($this->endpoints)
             ->setTranslation($this->language)

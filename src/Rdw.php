@@ -2,8 +2,15 @@
 
 namespace Jdkweb\RdwApi;
 
+use Jdkweb\RdwApi\Exceptions\RdwException;
+
 class Rdw
 {
+    public function make()
+    {
+        return $this;
+    }
+
     public function getApi(int|string $use_api = '')
     {
         // Get API class.
@@ -14,6 +21,11 @@ class Rdw
         }
 
         return new $class();
+    }
+
+    public function __call(string $name, array $arguments)
+    {
+        throw new RdwException('Always start with the method Rdw::getApi()');
     }
 
     /**

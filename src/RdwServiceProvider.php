@@ -3,7 +3,6 @@
 namespace Jdkweb\RdwApi;
 
 use Illuminate\Support\ServiceProvider;
-use Jdkweb\RdwApi\Enums\OutputFormat;
 
 class RdwServiceProvider extends ServiceProvider
 {
@@ -19,7 +18,7 @@ class RdwServiceProvider extends ServiceProvider
             return new Rdw();
         });
 
-        // rdw as alias: app('RdwApi')
+        // Alias
         $this->app->alias(Rdw::class, 'RdwApi');
     }
 

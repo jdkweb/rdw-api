@@ -6,7 +6,6 @@ use Illuminate\Support\Facades\Facade;
 
 class Rdw extends Facade
 {
-
     /**
      * Get a task builder instance.
      *
@@ -14,6 +13,6 @@ class Rdw extends Facade
      */
     protected static function getFacadeAccessor(): string
     {
-        return 'rdw'; // \Jdkweb\RdwApi\Rdw::class;
+        return 'RdwApi';
     }
 }
