@@ -9,11 +9,12 @@ use Jdkweb\RdwApi\Facades\Rdw;
 /**
  * Check if filament extension is used, load extension for it
  */
-if (! (\Composer\InstalledVersions::isInstalled('filament/filament')) ) {
-    class RdwApiExt extends RdwApiExtEmpty {}
-}
-elseif((\Composer\InstalledVersions::isInstalled('jdkweb/rdw-api-filament'))) {
+if( (\Composer\InstalledVersions::isInstalled('filament/filament')) &&
+    (\Composer\InstalledVersions::isInstalled('jdkweb/rdw-api-filament'))) {
     class RdwApiExt extends \Jdkweb\RdwApi\Filament\Controllers\RdwApiRequest {}
+}
+else {
+    class RdwApiExt extends RdwApiExtEmpty {}
 }
 
 class RdwApiRequest extends RdwApiExt

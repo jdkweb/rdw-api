@@ -12,11 +12,10 @@ use Filament\Support\Contracts\HasLabel;
  *
  * extends is not allowed in enums
  */
+if( (\Composer\InstalledVersions::isInstalled('filament/filament')) &&
+    (\Composer\InstalledVersions::isInstalled('jdkweb/rdw-api-filament'))) {
 
-
-if (! (\Composer\InstalledVersions::isInstalled('filament/filament')) ) {
-
-    enum OutputFormat: string
+    enum OutputFormat: string implements HasLabel
     {
         use OutputFormatTrait;
 
@@ -25,9 +24,9 @@ if (! (\Composer\InstalledVersions::isInstalled('filament/filament')) ) {
         case XML = 'xml';
     }
 }
-elseif ( (\Composer\InstalledVersions::isInstalled('jdkweb/rdw-api-filament')) ) {
+else {
 
-    enum OutputFormat: string implements HasLabel
+    enum OutputFormat: string
     {
         use OutputFormatTrait;
 
