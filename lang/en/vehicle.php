@@ -25,7 +25,7 @@ return [
     'wacht_op_keuren' => 'awaiting_inspection',
     'catalogusprijs' => 'list_price',
     'wam_verzekerd' => 'wam_insured',
-    'maximale_constructiesnelheid' => 'maximal_constructionspeed',
+    'maximale_constructiesnelheid' => "maximal_constructionspeed",
     'laadvermogen' => 'load_capacity',
     'oplegger_geremd' => 'trailer_braked',
     'aanhangwagen_autonoom_geremd' => 'trailer_autonomous_braked',

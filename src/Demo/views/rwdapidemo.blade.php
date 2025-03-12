@@ -33,7 +33,8 @@
                 Post Full Form<span class="block text-center text-sm font-normal">Laravel</span>
             </label>
             <div class="order-last p-4 bg-white w-full rounded rounded-tl-none transition">
-                <form method="POST" action="/{{ config('rdw-api.rdw_api_folder') }}/{{ config('rdw-api.rdw_api_demo_slug') }}/{{ $language }}?tab=1"
+                <form method="POST"
+                      action="/{{ config('rdw-api.rdw_api_folder') }}/{{ config('rdw-api.rdw_api_demo_slug') }}/{{ $language }}?tab=1"
                       class="flex flex-col items-stretch gap-4 mx-auto w-[90%] mb-8 align-middle justify-center">
                     @csrf
                     <fieldset class="border rounded-lg p-8 mt-8">
@@ -76,8 +77,9 @@
                             <select name="outputformat"
                                     class="border rounded w-full h-12 px-4"
                                     required>
-                                @foreach(Jdkweb\RdwApi\Enums\OutputFormat::cases() as $format)
-                                    <option value="{{ $format->name }}" {{ ($outputformat == $format->name ? 'selected' : '' ) }} >
+                                @foreach(Jdkweb\RdwApi\Enums\OutputFormats::cases() as $format)
+                                    <option
+                                        value="{{ $format->name }}" {{ ($outputformat == $format->name ? 'selected' : '' ) }} >
                                         {{ $format->getLabel()  }}
                                     </option>
                                 @endforeach
@@ -92,27 +94,29 @@
                 </form>
             </div>
             @if($filamentInstalled)
-            <input type="radio" name="tabs" id="tab2"
-                   value="2"
-                   class="hidden [&:checked+label]:bg-white [&:checked+label+div]:block">
-            <label for="tab2" onclick="location.href='/{{ config('rdw-api.rdw_api_folder') }}/{{ config('rdw-api.rdw_api_filament_folder') }}/{{ config('rdw-api.rdw_api_demo_slug') }}'"
-                   class="order-1 px-4 py-4 mr-1 rounded rounded-b-none cursor-pointer font-semibold bg-gray-200 transition">
-                Filament Forms<span class="block text-center text-sm font-normal">Laravel/Filament</span>
-            </label>
+                <input type="radio" name="tabs" id="tab2"
+                       value="2"
+                       class="hidden [&:checked+label]:bg-white [&:checked+label+div]:block">
+                <label for="tab2"
+                       onclick="location.href='/{{ config('rdw-api.rdw_api_folder') }}/{{ config('rdw-api.rdw_api_filament_folder') }}/{{ config('rdw-api.rdw_api_demo_slug') }}'"
+                       class="order-1 px-4 py-4 mr-1 rounded rounded-b-none cursor-pointer font-semibold bg-gray-200 transition">
+                    Filament Forms<span class="block text-center text-sm font-normal">Laravel/Filament</span>
+                </label>
             @endif
             <div class="order-last p-4 bg-white w-full rounded rounded-tl-none transition">
             </div>
         </div>
         @if(!empty($results))
             @if($outputformat == 'JSON')
-                <x-json  :results="$results" />
+                <x-json :results="$results"/>
             @elseif($outputformat == 'XML')
-                <x-xml  :results="$results" />
+                <x-xml :results="$results"/>
             @elseif($outputformat == 'ARRAY')
-                <x-array :results="$results" />
+                <x-array :results="$results"/>
             @endif
         @elseif($licenseplate != '')
-            <div class="block bg-slate-800 rounded p-8 text-yellow-300 font-bold whitespace-pre-wrap  my-6 min-h-[100px]">
+            <div
+                class="block bg-slate-800 rounded p-8 text-yellow-300 font-bold whitespace-pre-wrap  my-6 min-h-[100px]">
                 Geen resultaat / No result
             </div>
         @endif

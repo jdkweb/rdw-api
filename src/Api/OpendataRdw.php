@@ -5,9 +5,8 @@ namespace Jdkweb\RdwApi\Api;
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\ClientException;
 use GuzzleHttp\Exception\GuzzleException;
+use Jdkweb\RdwApi\Enums\Interface\Endpoint;
 use Jdkweb\RdwApi\Exceptions\RdwException;
-use Jdkweb\RdwApi\Enums\Endpoints;
-use Jdkweb\RdwApi\Forms\Components\RdwApiResponse;
 
 class OpendataRdw extends Rdw implements RdwApi
 {
@@ -44,7 +43,7 @@ class OpendataRdw extends Rdw implements RdwApi
     {
         foreach ($this->endpoints as $endpoint) {
             // Check endpoint exists
-            if (!$endpoint instanceof Endpoints) {
+            if (!$endpoint instanceof Endpoint) {
                 continue;
             }
 
@@ -64,7 +63,7 @@ class OpendataRdw extends Rdw implements RdwApi
      * @throws RdwException
      * @throws GuzzleException
      */
-    final protected function getRequest(Endpoints $endpoint): ?array
+    final protected function getRequest(Endpoint $endpoint): ?array
     {
         try {
             $response = $this->client->get($endpoint->value . "?kenteken=" . $this->license);

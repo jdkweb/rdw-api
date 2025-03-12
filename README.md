@@ -58,16 +58,17 @@ $result = (object) RdwApiRequest::make()
 - All RDW endpoints are selected
 - [RdwApiResponse](#RdwApiResponse) object is returned
 ### All options used
+
 ```php
 use Jdkweb\RdwApi\Controllers\RdwApiRequest;
-use Jdkweb\RdwApi\Enums\OutputFormat;
+use Jdkweb\RdwApi\Enums\OutputFormats;
 use Jdkweb\RdwApi\Enums\Endpoints;
 ...
 $result = RdwApiRequest::make()
     ->setAPI(0)
     ->setLicenseplate('AB-895-P')
     ->setEndpoints(Endpoints::cases())
-    ->setOutputformat(OutputFormat::JSON)
+    ->setOutputformat(OutputFormats::JSON)
     ->setLanguage('en')
     ->fetch(true);
 ```
@@ -86,7 +87,8 @@ Overwrite the config settings
 ```
 With or without hyphen-minus
 
-#### Select endpoints for request 
+#### Select endpoints for request
+
 ```php
 use \Jdkweb\RdwApi\Enums\Endpoints;
 ...
@@ -119,15 +121,16 @@ Available endpoints (not case sensitive):
 - Endpoints::cases() **[default]**
 
 #### Format of the response output
+
 ```php
-use \Jdkweb\RdwApi\Enums\OutputFormat;
+use \Jdkweb\RdwApi\Enums\OutputFormats;
 ...
 ->setOuputformat(string|OutputFormat)
 
 # examples
     
     // Enum
-    ->setOuputformat(OutputFormat::JSON)
+    ->setOuputformat(OutputFormats::JSON)
     
     // name, case insensitive
     ->setOuputformat('json')

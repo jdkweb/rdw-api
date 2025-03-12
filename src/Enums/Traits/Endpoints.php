@@ -1,8 +1,10 @@
 <?php
 
-namespace Jdkweb\RdwApi\Enums;
+namespace Jdkweb\RdwApi\Enums\Traits;
 
-trait EndpointsTrait
+use Jdkweb\RdwApi\Enums\Interface\Endpoint;
+
+trait Endpoints
 {
     /**
      * Select label
@@ -37,7 +39,7 @@ trait EndpointsTrait
         };
     }
 
-    public static function getCase(string $type): ?Endpoints
+    public static function getCase(string $type): ?Endpoint
     {
         $arr = array_filter(self::cases(), fn($enum) => (strtoupper($type) === $enum->name || $type === $enum->value));
 

@@ -5,6 +5,7 @@ namespace Jdkweb\RdwApi\Api;
 use GuzzleHttp\Client;
 use Illuminate\Support\Facades\Lang;
 use Jdkweb\RdwApi\Enums\Endpoints;
+use Jdkweb\RdwApi\Enums\Interface\Endpoint;
 use Jdkweb\RdwApi\Exceptions\RdwException;
 
 abstract class Rdw
@@ -180,7 +181,8 @@ abstract class Rdw
                 $newKey = strtolower(Lang::get('rdw-api::enums.' . strtoupper($dataset), [], $this->language)) . "_". $key+1;
             }
 
-            if(!isset($newKey)) continue;
+            // not set, take original
+            if(empty($newKey)) $newKey = $key;
 
             // If value is an array, recurse
             if (is_array($value)) {
@@ -219,7 +221,7 @@ abstract class Rdw
     protected function selectEndpoints(array $endpoints):bool
     {
         $this->endpoints =array_filter(array_map(function ($endpoint) {
-            if (!$endpoint instanceof Endpoints && is_string($endpoint)) {
+            if (!$endpoint instanceof Endpoint && is_string($endpoint)) {
                 return Endpoints::getCase($endpoint);
             } else {
                 return $endpoint;

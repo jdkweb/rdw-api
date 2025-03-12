@@ -1,8 +1,10 @@
 <?php
 
-namespace Jdkweb\RdwApi\Enums;
+namespace Jdkweb\RdwApi\Enums\Traits;
 
-trait OutputFormatTrait
+use Jdkweb\RdwApi\Enums\Interface\OutputFormat;
+
+trait OutputFormats
 {
     /**
      * Select label

@@ -2,9 +2,9 @@
 
 namespace Jdkweb\RdwApi\Enums;
 
-enum Endpoints: string
+enum Endpoints: string implements Interface\Endpoint
 {
-    use EndpointsTrait;
+    use Traits\Endpoints;
 
     // Select option values
     case VEHICLE = 'm9d7-ebf2.json';

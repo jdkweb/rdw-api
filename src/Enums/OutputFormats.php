@@ -1,11 +1,9 @@
 <?php
 namespace Jdkweb\RdwApi\Enums;
 
-use Filament\Support\Contracts\HasLabel;
-
-enum OutputFormat: string
+enum OutputFormats: string implements Interface\OutputFormat
 {
-    use OutputFormatTrait;
+    use Traits\OutputFormats;
 
     case ARRAY = 'array';
     case JSON = 'json';

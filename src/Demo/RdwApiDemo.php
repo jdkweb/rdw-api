@@ -4,7 +4,7 @@ namespace Jdkweb\RdwApi\Demo;
 
 use Illuminate\Support\Facades\View as SetView;
 use Illuminate\View\View;
-use Jdkweb\RdwApi\Enums\OutputFormat;
+use Jdkweb\RdwApi\Enums\OutputFormats;
 use Jdkweb\RdwApi\Enums\Endpoints;
 use Jdkweb\RdwApi\Controllers\RdwApiRequest;
 
@@ -80,8 +80,8 @@ class RdwApiDemo
 
             // Create output by format
             $result = match ($this->getOutputFormat()) {
-                OutputFormat::XML->name => $result->toXml(true),
-                OutputFormat::JSON->name => $result->toJson(),
+                OutputFormats::XML->name => $result->toXml(true),
+                OutputFormats::JSON->name => $result->toJson(),
                 default => $result->toArray(),
             };
         }
@@ -146,7 +146,7 @@ class RdwApiDemo
         $output = request()->get('outputformat') ?? 'ARRAY';
 
         // Check
-        return OutputFormat::getCase($output)?->name ?? 'ARRAY';
+        return OutputFormats::getCase($output)?->name ?? 'ARRAY';
     }
 
     //------------------------------------------------------------------------------------------------------------------
@@ -160,7 +160,7 @@ class RdwApiDemo
             'language' => (string) $this->getLanguage(),
             'outputformat' => (string) $this->getOutputFormat(),
             'results'=> $this->handleForm(),
-            'filamentInstalled' => (bool) (\Composer\InstalledVersions::isInstalled('jdkweb/rdw-api-filament'))
+            'filamentInstalled' => (bool) (\Composer\InstalledVersions::isInstalled('jdkweb/rdw-api-filament')) // Demo tabs
         ]);
     }
 }

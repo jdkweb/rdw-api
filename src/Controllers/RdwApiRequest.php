@@ -2,8 +2,11 @@
 
 namespace Jdkweb\RdwApi\Controllers;
 
+use Filament\Facades\Filament;
 use Jdkweb\RdwApi\Enums\Endpoints;
-use Jdkweb\RdwApi\Enums\OutputFormat;
+use Jdkweb\RdwApi\Enums\Interface\Endpoint;
+use Jdkweb\RdwApi\Enums\OutputFormats;
+use Jdkweb\RdwApi\Enums\Interface\OutputFormat;
 use Jdkweb\RdwApi\Facades\Rdw;
 
 class RdwApiRequest
@@ -22,12 +25,12 @@ class RdwApiRequest
      * Result API request
      * @var array|string|null
      */
-    private array|string|null $result = null;
+    protected array|string|null $result = null;
 
     /**
      * @var RdwApiRequest|null
      */
-    private static RdwApiRequest|null $instance = null;
+    protected static RdwApiRequest|null $instance = null;
 
     //------------------------------------------------------------------------------------------------------------------
 
@@ -90,8 +93,8 @@ class RdwApiRequest
             if (count($result->response) > 0) {
                 // Translated Formated response
                 $result->output = match ($this->outputformat) {
-                    OutputFormat::XML => $result->toXml(true),
-                    OutputFormat::JSON => $result->toJson(),
+                    OutputFormats::XML => $result->toXml(true),
+                    OutputFormats::JSON => $result->toJson(),
                     default => $result->toArray(),
                 };
             }
@@ -153,12 +156,12 @@ class RdwApiRequest
     /**
      * OutputFormat for result API request
      *
-     * @param  OutputFormat|string  $type
+     * @param  OutputFormats|string  $type
      * @return $this
      */
     public function setOutputformat(OutputFormat|string $type): static
     {
-        $this->outputformat = ($type instanceof OutputFormat ? $type : OutputFormat::getCase($type));
+        $this->outputformat = ($type instanceof OutputFormat ? $type : OutputFormats::getCase($type));
         return $this;
     }
 
@@ -173,7 +176,7 @@ class RdwApiRequest
     public function setEndpoints(array $endpoints = []): static
     {
         $this->endpoints = array_map(function ($endpoint) {
-            return ($endpoint instanceof Endpoints ? $endpoint : Endpoints::getCase($endpoint));
+            return ($endpoint instanceof Endpoint ? $endpoint : Endpoints::getCase($endpoint));
         }, $endpoints);
         return $this;
     }
@@ -227,7 +230,7 @@ class RdwApiRequest
      */
     public function getOutputformat(): string
     {
-        return $this->outputformat ?? OutputFormat::ARRAY;
+        return $this->outputformat ?? OutputFormats::ARRAY;
     }
 
     //------------------------------------------------------------------------------------------------------------------
@@ -261,8 +264,8 @@ class RdwApiRequest
     public function status(RdwApiResponse $request): bool
     {
         return match ($this->outputformat) {
-            OutputFormat::JSON => json_validate($request->toJson()),
-            OutputFormat::XML => (@simplexml_load_string($request->toXml()) ? 'true' : 'false'),
+            OutputFormats::JSON => json_validate($request->toJson()),
+            OutputFormats::XML => (@simplexml_load_string($request->toXml()) ? 'true' : 'false'),
             default => is_array($request->toArray()) && count($request->toArray()) >= 1
         };
     }
