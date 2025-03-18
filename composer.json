@@ -2,7 +2,7 @@
     "name": "jdkweb/rdw-api",
     "description": "Wrapper for RDW API for getting vehicle information from opendata.rdw.nl",
     "type": "library",
-    "license": "MIT",
+    "license": "GPL-3.0-or-later",
     "autoload": {
         "psr-4": {
             "Jdkweb\\RdwApi\\": "src/"
