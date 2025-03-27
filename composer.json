@@ -1,6 +1,13 @@
 {
     "name": "jdkweb/rdw-api",
     "description": "Wrapper for RDW API for getting vehicle information from opendata.rdw.nl",
+    "keywords": [
+        "php",
+        "laravel",
+        "api",
+        "rdw",
+        "overheid.io"
+    ],
     "type": "library",
     "license": "GPL-3.0-or-later",
     "autoload": {

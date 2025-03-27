@@ -1,12 +1,16 @@
 # RDW API
 
+[![Packagist Version](https://img.shields.io/packagist/v/jdkweb/rdw-api)](https://github.com/jdkweb/rdw-api)
+[![Static Badge](https://img.shields.io/badge/build-%20%3E%3D%208.1-brightgreen?style=flat&logo=php&logoSize=16&label=PHP)](https://github.com/jdkweb/rdw-api-filament) 
+[![Static Badge](https://img.shields.io/badge/build-%20%3E%3D%2010-slategray?style=flat-square&logo=laravel&logoColor=white&logoSize=16&label=Laravel)](https://github.com/jdkweb/rdw-api-filament)
+
 Laravel wrapper for the Dutch open mobility data. Basic Vehicle Registration All non-sensitive data of the Dutch vehicle fleet. 
 
 Laravel application to get vehicle information from [opendata.rdw.nl](https://opendata.rdw.nl) or [overheid.io](https://overheid.io). \
 
 This wrapper can be extended to be used in Filament: \
-Github: [rdw-api-filament](https://github.com/jdkweb/rdw-api-filament) \
-Packagist: [rdw-api-filament](https://packagist.org/packages/jdkweb/rdw-api-filament)  
+[![Static Badge](https://img.shields.io/badge/build-jdkweb%2Frdw--api--filament-blue?style=flat-square&logo=github&label=Github)](https://github.com/jdkweb/rdw-api-filament)
+[![Static Badge](https://img.shields.io/badge/build-jdkweb%2Frdw--api--filament-blue?style=flat-square&logo=packagist&logoColor=white&label=Packagist)](https://packagist.org/packages/jdkweb/rdw-api-filament)
 
 ## Table of contents
 
@@ -297,6 +301,6 @@ To use this wrapper in [Filament](https://filamentphp.com/) install the filament
 ```bash
 composer require jdkweb/rdw-api-filament
 ```
-Github: [jdkweb/rdw-api-filament](https://github.com/jdkweb/rdw-api-filament) \
-packagist: [jdkweb/rdw-api-filament](https://packagist.org/packages/jdkweb/rdw-api-filament)
+[![Static Badge](https://img.shields.io/badge/build-jdkweb%2Frdw--api--filament-blue?style=flat-square&logo=github&label=Github)](https://github.com/jdkweb/rdw-api-filament)
+[![Static Badge](https://img.shields.io/badge/build-jdkweb%2Frdw--api--filament-blue?style=flat-square&logo=packagist&logoColor=white&label=Packagist)](https://packagist.org/packages/jdkweb/rdw-api-filament)
 
